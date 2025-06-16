@@ -1,3 +1,18 @@
+# 📘 Guia de Instalação e Configuração do Projeto Node.js com Express, MySQL2 e Handlebars
+
+Este README contém anotações pessoais para registrar os passos essenciais na criação e configuração de um projeto básico utilizando **Node.js**, **Express**, **MySQL2** e **Handlebars** como template engine.
+
+---
+
+## 📦 Passo 1: Iniciando o Projeto com NPM
+
+O primeiro passo é iniciar um novo projeto Node.js. Isso irá gerar o arquivo `package.json`, responsável por armazenar todas as dependências e informações do projeto.
+
+```bash
+npm init -y
+```
+
+Esse comando cria o `package.json` com valores padrão, agilizando o processo inicial de configuração do projeto.
 
 
 ## 🚀 Passo 2: Instalar o Express
@@ -10,7 +25,6 @@ npm install express
 
 O Express facilita muito o trabalho com o back-end em Node.js, tornando o código mais limpo e organizado.
 
----
 
 ## 🧱 Passo 3: Criar o servidor
 
@@ -29,17 +43,14 @@ app.listen(3000, () => {
 });
 ```
 
----
 
 ## 🛢️ Passo 4: Criar o banco de dados
 
-Crio manualmente o banco de dados no MySQL. Isso pode ser feito via terminal, DBeaver, MySQL Workbench ou outro gerenciador.
+Crio manualmente o banco de dados no MySQL. Isso pode ser feito via terminal, DBeaver, MySQL Workbench ou outro gerenciador:
 
 ```sql
 CREATE DATABASE nome_do_banco;
 ```
-
----
 
 ## 🔗 Passo 5: Instalar o MySQL2
 
@@ -50,26 +61,24 @@ npm install mysql2
 ```
 
 ```js
-//Criando conexao
+const mysql = require('mysql2');
+
+// Criando conexão
 const conexao = mysql.createConnection({
-    host:'localhost',
-    user:'root', 
-    password:'@Gs189970', 
-    database:'projeto'
-})
+    host: 'localhost',
+    user: 'root', 
+    password: '@Gs189970', 
+    database: 'projeto'
+});
 
-//Teste de coneção 
-conexao.connect(function(erro){
-    if(erro) throw erro;
-    console.log('Conexão conecatado com sucesso')
-})
-
+// Teste de conexão 
+conexao.connect(function(erro) {
+    if (erro) throw erro;
+    console.log('Conexão estabelecida com sucesso');
+});
 ```
 
 Este módulo é necessário tanto para conexões diretas com o MySQL quanto para o uso com ORMs como o Sequelize.
-
----
-
 
 
 
@@ -84,150 +93,98 @@ npm install express-handlebars
 Depois, configuro no `app.js`:
 
 ```js
-// Importa a função engine do express-handlebars
 const { engine } = require('express-handlebars');
 
-// Configura o motor de visualização (template engine) como Handlebars
-// Isso permite renderizar arquivos com a extensão .handlebars
-app.engine('handlebars', engine()); // Define o motor que será usado para arquivos .handlebars
-
-// Define que o Handlebars será o motor de visualização padrão do projeto
-app.set('view engine', 'handlebars'); // Assim, posso usar res.render('arquivo') para renderizar uma view
-
-// Define o caminho da pasta onde ficam os arquivos de visualização
-app.set('views', './views'); // Ou seja, vai procurar os .handlebars dentro da pasta "views"
-
+// Configura o motor de visualização como Handlebars
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
 ```
 
-Estrutura basica para utilizar o handlebars
-```html
+📁 Estrutura básica para utilizar o Handlebars:
+```
 ├── app.js
 └── views
     ├── home.handlebars
     └── layouts
         └── main.handlebars
 ```
----
-
-
-
-
-## 👀 Passo 7: Importar o Bootstrap localmente com Express
-1️⃣ Instalar o Bootstrap via NPM
-```bash
-      npm install bootstrap
-```
----
-
-2️⃣ Configurar o Bootstrap no app.js 
-```js
-      // 	Cria uma rota pública para o navegador acessar os arquivos
-      // Isso permite que possamos usar os arquivos CSS e JS do Bootstrap dentro das views
-      app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'));
-
-      //Middleware => Função que intercepta requisições e pode alterar, processar ou responder a elas.
-
-      //app.use => Método do Express que registra um middleware para processar requisições.
-
-      ///bootstrap é a “porta de entrada” na URL
-
-      //express.static(...) => Middleware do Express para servir arquivos estáticos (CSS, JS, imagens etc.).
-      
-      //./node_modules/bootstrap/dist é o “endereço real” no seu projeto
-```
----
-
-3️⃣ Usando no Html  a rota publica definida 
- ```js
-  / <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"> 
-
-  // Cria uma rota pública para o navegador acessar os arquivos 
- ```
----
 
 ## ⚙️ Passo 8: Instalar o Nodemon (opcional)
 
-O Nodemon reinicia automaticamente o servidor sempre que o código é alterado. Útil durante o desenvolvimento.
+O Nodemon reinicia automaticamente o servidor sempre que o código é alterado, facilitando o desenvolvimento.
 
 ```bash
 npm install --save-dev nodemon
 ```
 
-No `package.json`, adiciono o script:
 
-```json
-"scripts": {
-  "dev": "nodemon index.js"
-}
+
+## 👀 Passo 9: Estruturando Formulário e Conceitos do App
+
+### 1️⃣ Estrutura básica no meu formulário para trabalhar com envio de informações
+
+```html
+<form action="/cadastrar" method="POST" enctype="multipart/form-data">
+  <input type="text" name="produto">
+  <input type="file" name="imagem">
+  <button type="submit">Cadastrar</button>
+</form>
 ```
 
----
-
-## 👀 Passo 9: Estruturando formulario e conceitos do app
-
-1-Estrutura basica no meu formulario para trabalhar com envio de informações
- ```bash
-  action="/cadastrar" {{defino a Rota que as info irão}}
-  method="POST"  {{Metodo de envio das informações}}
-  enctype="multipart/form-data" {{Permite o envio de arquivos binarios como imagems, videos}}
-  name="produto" {{Serve para fazer referencia quando enviado no arquivo json}}
- ```
----
-2-Manipulação de dados via rotas
 ```bash
-  app.use(express.json())  para ler JSON 
-  app.use(express.urlencoded({extended:false})); # para ler dados de formulários com uma estrutura mais simplifida de dados. Essa estrutura irá interpretar os dados apenas como string ou array
+action="/cadastrar"                # Defino a rota que os dados serão enviados  
+method="POST"                      # Método de envio das informações  
+enctype="multipart/form-data"      # Permite o envio de arquivos binários como imagens, vídeos  
+name="produto"                     # Serve para fazer referência quando enviado no JSON  
 ```
 
-3-Instalando e configurando o upload expresso de arquivo
- 
- ```bash
-  # Middleware express simples para upload de arquivos.
+---
 
-  # Com NPM
-    npm i express-fileupload
+### 2️⃣ Manipulação de dados via rotas
 
-  #Importando módulo fileupload
-    const fileupload = required('express-fileupload')
-  
-  #Habilitando o upload de arquivos no app
-    app.use(fileupload())
+```js
+app.use(express.json()); 
+// Permite ler JSON no corpo da requisição
 
-  #Usando o upload no meu app.post, no caso quando uso files tou chamando o fiilesupload e definindo o name que quero pegar e defino o dado também!
-    console.log(req.files.imagem.name) 
-
- #Enviando uma imagem  para pasta imagem onde:
-    req.files.imagem.mv(__dirname+'/image/'+req.files.imagem.name)
-#req.files.imagem.name => 	Usa o nome original do arquivo enviado (ex: foto.jpg, arquivo.pdf
-    #req.files.imagem: é o arquivo enviado com name="imagem" no formulário.
-  #.mv(): move esse arquivo para onde você quiser.
-  #caminho: caminho absoluto ou relativo onde o arquivo será salvo.
-  #callback: função que trata erro ou sucesso.
-    req.files.imagem.mv(caminho, callback);
- ```
+app.use(express.urlencoded({ extended: false }));
+// Permite ler dados de formulários com estrutura simplificada, interpretando como string ou array
+```
 
 ---
 
+### 3️⃣ Instalando e configurando o upload expresso de arquivos
 
-## ✅ Resumo
+```bash
+# Middleware express simples para upload de arquivos
+npm install express-fileupload
+```
 
-| Ferramenta        | Função                                                   |
-|-------------------|----------------------------------------------------------|
-| **Express**       | Cria o servidor, rotas, gerencia requisições             |
-| **MySQL2**        | Conecta o Node.js ao banco de dados MySQL                |
-| **Sequelize**     | ORM para manipular o banco de dados com JavaScript       |
-| **Handlebars**    | Template engine para renderizar páginas HTML dinâmicas   |
-| **Nodemon**       | Reinicia o servidor automaticamente durante o desenvolvimento |
+```js
+// Importando módulo fileupload
+const fileupload = require('express-fileupload');
+
+// Habilitando o upload de arquivos no app
+app.use(fileupload());
+```
 
 ---
 
-## 🧠 Observações finais
+### 4️⃣ Usando o upload no app.post
 
-- Sempre verificar se os módulos foram instalados corretamente no `package.json`.
-- Lembre-se de configurar a conexão com o banco de dados, seja usando Sequelize ou MySQL puro.
-- Crie rotas organizadas e separe as responsabilidades em arquivos e pastas diferentes.
+```js
+app.post('/cadastrar', (req, res) => {
+  console.log(req.files.imagem.name); // Mostra o nome original do arquivo enviado
 
+  // Enviando a imagem para a pasta 'image'
+  req.files.imagem.mv(__dirname + '/image/' + req.files.imagem.name);
+});
+```
 
-
-
-
+```bash
+req.files.imagem           => É o arquivo enviado com name="imagem" no formulário  
+req.files.imagem.name      => Usa o nome original do arquivo enviado (ex: foto.jpg, arquivo.pdf)  
+.mv()                      => Move esse arquivo para onde você quiser  
+__dirname + '/image/'...   => Caminho absoluto onde o arquivo será salvo  
+callback                   => Função opcional que trata erro ou sucesso  
+```
