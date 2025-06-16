@@ -170,7 +170,7 @@ app.use(fileupload());
 
 ---
 
-### 4️⃣ Usando o upload no app.post
+### 4️⃣ Usando o upload no app.post 
 
 ```js
 app.post('/cadastrar', (req, res) => {
@@ -188,3 +188,43 @@ req.files.imagem.name      => Usa o nome original do arquivo enviado (ex: foto.j
 __dirname + '/image/'...   => Caminho absoluto onde o arquivo será salvo  
 callback                   => Função opcional que trata erro ou sucesso  
 ```
+---
+
+
+### 📌 Passo 10: Cadastro de Produtos no Banco de Dados e Upload de Imagem
+
+Neste passo, implementamos a **rota de cadastro de produtos**, onde o usuário pode enviar as informações de um novo produto através de um formulário. Essas informações serão **armazenadas no banco de dados MySQL** e a imagem do produto será **salva localmente na pasta `/image`** do projeto.
+
+---
+
+### 📥 Rota POST `/cadastrar`
+
+```js
+// Rota responsável por cadastrar um novo produto
+//req => Representa a requisição feita pelo cliente.
+//req.body => Representa os dados do corpo da requisição.
+//req.body.nome =>  Acessa o valor enviado no campo <input name="produto">.
+app.post('/cadastrar', function (req, res) {
+    // Obtemos os dados enviados no formulário (produto, valor e imagem)
+    let produto = req.body.produto; // Nome do produto
+    let valor = req.body.valor;     // Valor do produto
+    let imagem = req.files.imagem.name; // Nome do arquivo da imagem
+
+    // Comando SQL para inserir o produto no banco de dados
+    let sql = `INSERT INTO produtos (nome, valor, imagem) VALUES ('${produto}', '${valor}', '${imagem}')`;
+
+    // Executamos o comando SQL
+    conexao.query(sql, function (erro, retorno) {
+        // Se der erro na inserção, o sistema lança o erro no terminal
+        if (erro) throw erro;
+
+        // Se der certo, a imagem é movida para a pasta /image
+        req.files.imagem.mv(__dirname + '/image/' + req.files.imagem.name);
+
+        // Exibe o retorno do banco no console (opcional)
+        console.log(retorno);
+    });
+
+    // Após o cadastro, o usuário é redirecionado para a rota principal
+    res.redirect('/');
+});

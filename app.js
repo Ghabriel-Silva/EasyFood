@@ -45,7 +45,7 @@ conexao.connect(function (erro) {
 
 //manipulação de dados via rotas
 app.use(express.json()); //para ler JSON
-app.use(express.urlencoded({extended:false})); // para ler dados de formulários com uma estrutura mais simplifida de dados. Essa estrutura irá interpretar os dados apenas como string ou array
+app.use(express.urlencoded({ extended: false })); // para ler dados de formulários com uma estrutura mais simplifida de dados. Essa estrutura irá interpretar os dados apenas como string ou array
 
 //Definindo rota principal 
 app.get('/', function (req, res) {
@@ -54,11 +54,29 @@ app.get('/', function (req, res) {
 
 //Rota de cadastro 
 app.post('/cadastrar', function (req, res) {
-    console.log(req.body) //requisição do corpo 
-    console.log(req.files.imagem.name)
+    //Obter os dados que seram utilizados para cadastro
+    let produto = req.body.produto;
+    let valor = req.body.valor;
+    let imagem = req.files.imagem.name;
 
-    req.files.imagem.mv(__dirname+'/image/'+req.files.imagem.name) 
-    res.end()
+    //Sql 
+    let sql = `INSERT INTO produtos (nome, valor, imagem) VALUES ('${produto}', '${valor}', '${imagem}')`
+
+
+    //Executar  comando no sql
+    conexao.query(sql, function(erro, retorno){
+
+        //caso ocorra erro 
+        if(erro) throw erro
+
+        //caso ocorra o cadastro
+        req.files.imagem.mv(__dirname + '/image/' + req.files.imagem.name);
+        console.log(retorno)
+    })
+
+    //Retornar para rota principal
+    res.redirect('/')
+
 })
 
 //Iniciando servidor local host
