@@ -1,19 +1,4 @@
 
-# Guia de Instalação e Configuração do Projeto Node.js com Express, MySQL2 e Handlebars
-
-Este README contém anotações pessoais para lembrar os passos necessários na configuração de um projeto básico utilizando Node.js, Express, MySQL2 e Handlebars como template engine.
-
----
-
-## 📦 Passo 1: Iniciar o projeto com NPM
-
-Primeiro, é necessário iniciar um novo projeto Node.js. Isso criará o arquivo `package.json`, onde serão registradas todas as dependências.
-
-```bash
-npm init -y
-```
-
----
 
 ## 🚀 Passo 2: Instalar o Express
 
@@ -86,6 +71,8 @@ Este módulo é necessário tanto para conexões diretas com o MySQL quanto para
 ---
 
 
+
+
 ## 🔧 Passo 6: Instalar o Handlebars
 
 O Handlebars será usado como motor de visualização (template engine), permitindo criar páginas dinâmicas renderizadas pelo servidor.
@@ -122,19 +109,40 @@ Estrutura basica para utilizar o handlebars
 ```
 ---
 
-## 👀 Passo 7: Estrutura de pastas recomendada
 
+
+
+## 👀 Passo 7: Importar o Bootstrap localmente com Express
+1️⃣ Instalar o Bootstrap via NPM
 ```bash
-/project
-├── views/           # Arquivos .handlebars (páginas)
-├── public/          # Arquivos estáticos (CSS, imagens, JS)
-├── models/          # Modelos do Sequelize
-├── routes/          # Arquivos de rotas
-├── config/          # Conexão com banco de dados
-├── index.js         # Arquivo principal
-└── package.json
+      npm install bootstrap
 ```
+---
 
+2️⃣ Configurar o Bootstrap no app.js 
+```js
+      // 	Cria uma rota pública para o navegador acessar os arquivos
+      // Isso permite que possamos usar os arquivos CSS e JS do Bootstrap dentro das views
+      app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'));
+
+      //Middleware => Função que intercepta requisições e pode alterar, processar ou responder a elas.
+
+      //app.use => Método do Express que registra um middleware para processar requisições.
+
+      ///bootstrap é a “porta de entrada” na URL
+
+      //express.static(...) => Middleware do Express para servir arquivos estáticos (CSS, JS, imagens etc.).
+      
+      //./node_modules/bootstrap/dist é o “endereço real” no seu projeto
+```
+---
+
+3️⃣ Usando no Html  a rota publica definida 
+ ```js
+  / <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"> 
+
+  // Cria uma rota pública para o navegador acessar os arquivos 
+ ```
 ---
 
 ## ⚙️ Passo 8: Instalar o Nodemon (opcional)
@@ -155,6 +163,52 @@ No `package.json`, adiciono o script:
 
 ---
 
+## 👀 Passo 9: Estruturando formulario e conceitos do app
+
+1-Estrutura basica no meu formulario para trabalhar com envio de informações
+ ```bash
+  action="/cadastrar" {{defino a Rota que as info irão}}
+  method="POST"  {{Metodo de envio das informações}}
+  enctype="multipart/form-data" {{Permite o envio de arquivos binarios como imagems, videos}}
+  name="produto" {{Serve para fazer referencia quando enviado no arquivo json}}
+ ```
+---
+2-Manipulação de dados via rotas
+```bash
+  app.use(express.json())  para ler JSON 
+  app.use(express.urlencoded({extended:false})); # para ler dados de formulários com uma estrutura mais simplifida de dados. Essa estrutura irá interpretar os dados apenas como string ou array
+```
+
+3-Instalando e configurando o upload expresso de arquivo
+ 
+ ```bash
+  # Middleware express simples para upload de arquivos.
+
+  # Com NPM
+    npm i express-fileupload
+
+  #Importando módulo fileupload
+    const fileupload = required('express-fileupload')
+  
+  #Habilitando o upload de arquivos no app
+    app.use(fileupload())
+
+  #Usando o upload no meu app.post, no caso quando uso files tou chamando o fiilesupload e definindo o name que quero pegar e defino o dado também!
+    console.log(req.files.imagem.name) 
+
+ #Enviando uma imagem  para pasta imagem onde:
+    req.files.imagem.mv(__dirname+'/image/'+req.files.imagem.name)
+#req.files.imagem.name => 	Usa o nome original do arquivo enviado (ex: foto.jpg, arquivo.pdf
+    #req.files.imagem: é o arquivo enviado com name="imagem" no formulário.
+  #.mv(): move esse arquivo para onde você quiser.
+  #caminho: caminho absoluto ou relativo onde o arquivo será salvo.
+  #callback: função que trata erro ou sucesso.
+    req.files.imagem.mv(caminho, callback);
+ ```
+
+---
+
+
 ## ✅ Resumo
 
 | Ferramenta        | Função                                                   |
@@ -172,3 +226,8 @@ No `package.json`, adiciono o script:
 - Sempre verificar se os módulos foram instalados corretamente no `package.json`.
 - Lembre-se de configurar a conexão com o banco de dados, seja usando Sequelize ou MySQL puro.
 - Crie rotas organizadas e separe as responsabilidades em arquivos e pastas diferentes.
+
+
+
+
+

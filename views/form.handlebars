@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina incial</title>
-</head>
-<body>
-    <h1>Hello world</h1>
-</body>
-</html>
+<main>
+    <div class="container  mt-3">
+        <form 
+            action="/cadastrar"  method="POST" enctype="multipart/form-data"
+            class="max-width-custom   bg-light  p-3 rounded-2"
+        >
+            <div class="mb-3">
+                <label for="produto" class="form-label">Produto</label>
+                <input type="text" class="form-control" id="produto" aria-describedby="emailHelp" name="produto">
+            </div>
+            <div class="mb-3">
+                <label for="preco" class="form-label">Preço</label>
+                <input type="number" class="form-control" id="preco" name="preco">
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="file" name="imagem">
+            </div>
+            <button type="submity" class="btn btn-primary ">Adcionar</button>
+        </form>
+    </div>
+</main>
