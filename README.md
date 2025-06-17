@@ -190,10 +190,13 @@ callback                   => Função opcional que trata erro ou sucesso
 ```
 ---
 
-
 ## 📌 Passo 10: Cadastro de Produtos no Banco de Dados e Upload de Imagem
 
-Neste passo, implementamos a **rota de cadastro de produtos**, onde o usuário pode enviar as informações de um novo produto através de um formulário. Essas informações serão **armazenadas no banco de dados MySQL** e a imagem do produto será **salva localmente na pasta `/image`** do projeto.
+Neste passo, implementamos a **rota de cadastro de produtos**, onde o usuário pode enviar as informações de um novo produto através de um formulário.  
+Essas informações serão:
+
+➡️ Armazenadas no banco de dados **MySQL**  
+➡️ E a imagem do produto será **salva localmente** na pasta `/image` do projeto
 
 ---
 
@@ -201,40 +204,66 @@ Neste passo, implementamos a **rota de cadastro de produtos**, onde o usuário p
 
 ```js
 // Rota responsável por cadastrar um novo produto
-//req => Representa a requisição feita pelo cliente.
-//req.body => Representa os dados do corpo da requisição.
-//req.body.nome =>  Acessa o valor enviado no campo <input name="produto">.
 app.post('/cadastrar', function (req, res) {
-    // Obtemos os dados enviados no formulário (produto, valor e imagem)
-    let produto = req.body.produto; // Nome do produto
-    let valor = req.body.valor;     // Valor do produto
-    let imagem = req.files.imagem.name; // Nome do arquivo da imagem
+    // Obtemos os dados enviados no formulário
+    let produto = req.body.produto;           // Nome do produto
+    let valor = req.body.valor;               // Valor do produto
+    let imagem = req.files.imagem.name;       // Nome do arquivo de imagem enviado
 
-    // Comando SQL para inserir o produto no banco de dados
+    // Comando SQL para inserir o produto no banco
     let sql = `INSERT INTO produtos (nome, valor, imagem) VALUES ('${produto}', '${valor}', '${imagem}')`;
 
-    // Executamos o comando SQL
+    // Executa o comando no banco
     conexao.query(sql, function (erro, retorno) {
-        // Se der erro na inserção, o sistema lança o erro no terminal
-        if (erro) throw erro;
+        if (erro) throw erro; // Se der erro, mostra no terminal
 
-        // Se der certo, a imagem é movida para a pasta /image
-        req.files.imagem.mv(__dirname + '/image/' + req.files.imagem.name);
+        // Move a imagem para a pasta /image
+        req.files.imagem.mv(__dirname + '/image/' + imagem);
 
-        // Exibe o retorno do banco no console (opcional)
+        // Exibe no console o retorno do banco (opcional)
         console.log(retorno);
     });
 
-    // Após o cadastro, o usuário é redirecionado para a rota principal
+    // Após o cadastro, redireciona para a página principal
     res.redirect('/');
 });
+```
 
+---
+
+### 📌 Explicações importantes
+
+- `req.body` → Objeto que contém os dados enviados no formulário (`input name`)
+- `req.body.produto` → Valor do campo com `name="produto"`
+- `req.files` → Contém os arquivos enviados pelo formulário (`enctype="multipart/form-data"`)
+- `req.files.imagem.name` → Nome original do arquivo de imagem enviado
+- `req.files.imagem.mv(destino)` → Move o arquivo enviado para o destino informado
+- `__dirname` → Caminho absoluto da raiz do projeto
+
+---
+
+### 📂 Estrutura esperada
 
 ```
+/projeto
+  ├── image/
+  │     └── camiseta.jpg
+  ├── views/
+  ├── app.js
+  └── ...
+```
+
+> 📝 Certifique-se de que:
+> - A pasta `/image` existe na raiz do projeto
+> - O formulário HTML está com o `enctype="multipart/form-data"`
+> - Você está utilizando o middleware `express-fileupload`
+
 ---
+
+
 # 11: Listando Produtos
 
-## Passo 1: Rota principal e consulta no banco
+### Passo 1️⃣: Rota principal e consulta no banco
 
 ```js
 app.get('/', function (req, res) {
@@ -287,7 +316,7 @@ No template Handlebars, você acessará essa variável assim:
 
 ---
 
-## Passo 2: Servir imagens estáticas com `express.static`
+### Passo 2️⃣: Servir imagens estáticas com `express.static`
 
 ```js
 app.use('/imagem', express.static('./image'))
@@ -301,7 +330,7 @@ app.use('/imagem', express.static('./image'))
 
 ---
 
-## Passo 3: O template Handlebars mostrando os produtos
+### Passo 3️⃣: O template Handlebars mostrando os produtos
 
 ```handlebars
 {{#each produtos}}
@@ -323,7 +352,7 @@ app.use('/imagem', express.static('./image'))
 
 ---
 
-## Observação final
+### Observação final
 
 Se você quiser mudar o nome da variável `produtos` para outra (como `lista`, `resultados`, etc.), é só alterar no `res.render` e também no template:
 
