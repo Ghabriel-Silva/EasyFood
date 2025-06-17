@@ -26,6 +26,9 @@ app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'))
 //Referenciando a pasta css
 app.use('/css', express.static('./css'))
 
+//Referenciando a pasta Imagem, no handlebars tenho que voltar pasta para acessar a pasta
+app.use('/imagem', express.static('./image'))
+
 
 //importando módulo mysql2 
 const mysql = require('mysql2')
@@ -49,7 +52,13 @@ app.use(express.urlencoded({ extended: false })); // para ler dados de formulár
 
 //Definindo rota principal 
 app.get('/', function (req, res) {
-    res.render('form')
+    let sql = 'SELECT * FROM produtos' //Selecionando todos produtos do Banco de dados
+    
+    //executando 
+    conexao.query(sql, function(erro, retorno){
+    res.render('form', {produtos: retorno}) //Retorno o formulario e vou retornar um json contendo todos produtos
+    })
+
 })
 
 //Rota de cadastro 
