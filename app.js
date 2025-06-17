@@ -88,6 +88,17 @@ app.post('/cadastrar', function (req, res) {
 
 })
 
+//Rota para remover produtos
+app.get('/remover/:codigo/:imagem', function(req, res){
+    const codigo = req.params.codigo
+    const imagem =req.params.imagem
+
+    console.log(codigo)
+    console.log(imagem)
+    res.send(`${codigo}, ${imagem}`)
+})
+
+
 //Iniciando servidor local host
 app.listen(8080, function () {
     console.log('servidor rodando...')

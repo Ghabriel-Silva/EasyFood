@@ -433,4 +433,6 @@ res.render('form', { lista: retorno })
 ```
 
 
+## 12 : Removeno produto
+
 
