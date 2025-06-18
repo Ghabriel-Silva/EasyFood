@@ -1,0 +1,30 @@
+<main>
+    {{#each produtos}}
+    <div class="container mt-3">
+
+        <!-- Espaço reservado para a imagem do produto -->
+        <form action="/editar" method="POST" enctype="multipart/form-data"
+            class="max-width-custom bg-light p-3 rounded-2">
+
+            <div class="mb-3">
+                <label for="produto" class="form-label">Produto</label>
+                <input type="text" class="form-control" id="produto" name="produto" value="{{nome}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="preco" class="form-label">Valor</label>
+                <input type="number" class="form-control" id="preco" name="valor" value="{{valor}}">
+            </div>
+
+            <div class="mb-3">
+                <input class="form-control" type="file" name="imagem">
+            </div>
+
+            <input type="hidden" name="codigo" value="{{codigo}}">
+            <input type="hidden" name="imagemAntiga" >
+
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </form>
+    </div>
+    {{/each}}
+</main>

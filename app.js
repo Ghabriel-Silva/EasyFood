@@ -118,6 +118,20 @@ app.get('/remover/:codigo/:imagem', function (req, res) {
     res.redirect('/')
 })
 
+//Rota para editar produto
+app.get('/editar/:codigo/:imagem', function(req, res){
+    let sql = `SELECT * FROM produtos WHERE codigo = ${req.params.codigo}`
+    const caminhoImagem = path.join(__dirname, 'image', req.params.imagem)
+
+    conexao.query(sql, function(erro, retorno){
+        if(erro) throw erro
+        console.log(retorno)
+        res.render('form-editar', {
+            produtos: retorno
+        })
+    })
+
+})
 
 //Iniciando servidor local host
 app.listen(8080, function () {

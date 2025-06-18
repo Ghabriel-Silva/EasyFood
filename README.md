@@ -505,9 +505,7 @@ app.get('/remover/:codigo/:imagem', function (req, res) {
 4. **Remove a imagem** do sistema de arquivos com `fs.unlink(...)`.
 5. **Redireciona** o usuário para a página principal após a operação.
 
-
-
 ---
-
+## 📦 Passo 13 – Edição de Produtos
 
 
