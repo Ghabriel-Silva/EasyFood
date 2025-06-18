@@ -431,36 +431,83 @@ res.render('form', { lista: retorno })
   {{nome}} - {{valor}}
 {{/each}}
 ```
-
-
+---
 
 ## 📦 Passo 12 – Exclusão de Produtos
 
 ### 🔗 Link de exclusão no front-end
 
+Para remover um produto, é necessário criar um botão no front-end que direcione para a rota de remoção. O botão envia dois parâmetros via URL: o código (ID) do produto e o nome da imagem correspondente.
+
 ```html
 <a href="/remover/{{codigo}}/{{imagem}}" class="btn btn-danger">Remover</a>
 ```
 
-Esse botão envia para a rota de remoção os seguintes parâmetros:
-- `codigo`: ID do produto.
-- `imagem`: nome do arquivo de imagem que está salvo na pasta.
+Parâmetros enviados:
+- `codigo`: ID do produto a ser removido do banco de dados.
+- `imagem`: nome do arquivo da imagem salva na pasta de imagens.
 
-### 🔁 Rota back-end de remoção
+---
+
+### 🧱 Módulo File System (`fs`)
+
+O `fs` é um módulo nativo do Node.js utilizado para manipulação de arquivos e diretórios. Ele permite realizar operações como leitura, escrita, exclusão e renomeação de arquivos diretamente no sistema operacional.
+
+Para utilizá-lo, é necessário importar no início do seu arquivo:
 
 ```js
-app.get('/remover/:codigo/:imagem', function(req, res){
-    const codigo = req.params.codigo;
-    const imagem = req.params.imagem;
+const fs = require('fs');
+```
 
-    console.log(codigo);
-    console.log(imagem);
+---
 
-    res.send(`${codigo}, ${imagem}`);
+### 📁 Módulo Path (`path`)
+
+O `path` também é um módulo nativo do Node.js que auxilia na construção de caminhos de arquivos e diretórios, garantindo compatibilidade com diferentes sistemas operacionais (Windows, Linux, Mac).
+
+Importação recomendada:
+
+```js
+const path = require('path');
+```
+
+---
+
+### 🔁 Rota de Remoção no Back-End
+
+Abaixo está a rota responsável por excluir um produto do banco de dados e, em seguida, deletar sua imagem associada da pasta local:
+
+```js
+app.get('/remover/:codigo/:imagem', function (req, res) {
+    let sql = `DELETE FROM produtos WHERE codigo = ${req.params.codigo}`;
+    const caminhoImagem = path.join(__dirname, 'image', req.params.imagem);
+
+    conexao.query(sql, function (erro, retorno) {
+        if (erro) throw erro;
+
+        fs.unlink(caminhoImagem, (erro) => {
+            if (erro) {
+                console.log('Falha ao remover a imagem:', erro);
+            } else {
+                console.log('Imagem removida com sucesso!');
+            }
+        });
+
+        res.redirect('/');
+    });
 });
 ```
 
-Essa rota ainda está em fase de testes. Ela captura o código e o nome da imagem via URL e exibe no console para verificação.
+#### Explicação:
+1. **Recebe os parâmetros** `codigo` e `imagem` pela URL.
+2. **Executa uma query SQL** para remover o produto do banco de dados com base no código.
+3. **Monta o caminho absoluto** do arquivo da imagem com `path.join(...)`, garantindo que o caminho esteja correto independentemente do sistema operacional.
+4. **Remove a imagem** do sistema de arquivos com `fs.unlink(...)`.
+5. **Redireciona** o usuário para a página principal após a operação.
+
+
 
 ---
+
+
 

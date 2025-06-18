@@ -4,6 +4,9 @@ const express = require('express')
 //Importando módulo fileupload
 const fileupload = require('express-fileupload')
 
+//Requerindo path
+const path = require('path');
+
 //App
 const app = express()
 
@@ -22,11 +25,15 @@ app.set('views', './views');
 //importando o modulo bootstrap para poder usar no projeto
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'))
 
+//importando FilesSytem
+const fs = require('fs')
+
+
 
 //Referenciando a pasta css
 app.use('/css', express.static('./css'))
 
-//Referenciando a pasta Imagem, no handlebars tenho que voltar pasta para acessar a pasta
+//Referenciando a pasta Imagem
 app.use('/imagem', express.static('./image'))
 
 
@@ -53,13 +60,14 @@ app.use(express.urlencoded({ extended: false })); // para ler dados de formulár
 //Definindo rota principal 
 app.get('/', function (req, res) {
     let sql = 'SELECT * FROM produtos' //Selecionando todos produtos do Banco de dados
-    
+
     //executando 
-    conexao.query(sql, function(erro, retorno){
-    res.render('form', {produtos: retorno}) //Retorno o formulario e vou retornar um json contendo todos produtos
+    conexao.query(sql, function (erro, retorno) {
+        res.render('form', { produtos: retorno }) //Retorno o formulario e vou retornar um json contendo todos produtos
     })
 
 })
+
 
 //Rota de cadastro 
 app.post('/cadastrar', function (req, res) {
@@ -73,10 +81,10 @@ app.post('/cadastrar', function (req, res) {
 
 
     //Executar  comando no sql
-    conexao.query(sql, function(erro, retorno){
+    conexao.query(sql, function (erro, retorno) {
 
         //caso ocorra erro 
-        if(erro) throw erro
+        if (erro) throw erro
 
         //caso ocorra o cadastro
         req.files.imagem.mv(__dirname + '/image/' + req.files.imagem.name);
@@ -89,13 +97,25 @@ app.post('/cadastrar', function (req, res) {
 })
 
 //Rota para remover produtos
-app.get('/remover/:codigo/:imagem', function(req, res){
-    const codigo = req.params.codigo
-    const imagem =req.params.imagem
+app.get('/remover/:codigo/:imagem', function (req, res) {
+    let sql = `DELETE FROM produtos WHERE codigo = ${req.params.codigo}`
 
-    console.log(codigo)
-    console.log(imagem)
-    res.send(`${codigo}, ${imagem}`)
+    const caminhoImagem = path.join(__dirname, 'image', req.params.imagem); //📦 path é um módulo nativo do Node.js que serve para trabalhar com caminhos de arquivos e pastas de forma segura e compatível com qualquer sistema operacional (Windows, Linux, Mac).
+    conexao.query(sql, function(erro, retorno){
+        if(erro) throw erro
+
+        //O Fs.unlink faz a remoção de um arquivo pode ser de texto, imagem, pdf, pasta. Eu passo 2 informações o local que esta o arquivo e uma função callBack que é obrigatoria que ira tratar de error
+        fs.unlink(caminhoImagem, (erro)=>{
+            if (erro) {
+                console.log('Falha ao remover a imagem:', erro);
+            } else {
+                console.log('Imagem removida com sucesso!');
+            }
+        })
+    })
+
+    //Redirecionar
+    res.redirect('/')
 })
 
 
