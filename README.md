@@ -506,6 +506,94 @@ app.get('/remover/:codigo/:imagem', function (req, res) {
 5. **Redireciona** o usuário para a página principal após a operação.
 
 ---
-## 📦 Passo 13 – Edição de Produtos
+## 📦 Passo 13 – Criando rota para Edição de produtos
+
+  Nesse caso estamos criando apenas a rota que ira direcionar o usuário para a rota de edição, onde o mesmo tera inputs para edição
+ ### adiconando rota de editar nos botão de edição
+ ```html
+   <a href="/Editar/{{codigo}}/{{imagem}}" class="btn btn-danger">Editar</a>
+   <!-- Botao com a rota, quando clicar em editar redireciona para uma rota de edição -->
+```
+### Criando rota no app
+
+Primeiro crio uma rota depois dentro da rota executo comando de pesquisa para pegar o produtos no caso o retorno da consulta sera atibudio a produtos que poderei usar no handlebars
+```js
+//Rota para editar produto
+    app.get('/editar/:codigo/:imagem', function(req, res){
+        let sql = `SELECT * FROM produtos WHERE codigo = ${req.params.codigo}`
+        const caminhoImagem = path.join(__dirname, 'image', req.params.imagem)
+
+        conexao.query(sql, function(erro, retorno){
+            if(erro) throw erro
+            console.log(retorno)
+            res.render('form-editar', {
+                produtos: retorno[0] // ← passa o objeto direto, não o array
+                // Como só tem 1 item, você pode simplificar e acessar direto o primeiro elemento
+            })
+        })
+
+    })
+
+
+```
+### Crio um html para rota Editar onde atribui o retonorno a produtos 
+
+```html
+  
+  <main>
+      <div class="container mt-3">
+          <div class=" img-edite">
+              <img src="/imagem/{{produtos.imagem}}" alt="Imagem do produto" class="img-fluid" style="max-height: 100%;">
+          </div>
+          <form action="/editar" method="POST" enctype="multipart/form-data"
+              class="max-width-custom bg-light p-3 rounded-2">
+
+              <div class="mb-3">
+                  <label for="produto" class="form-label">Produto</label>
+                  <input type="text" class="form-control" id="produto" name="produto" value="{{produtos.nome}}">
+              </div>
+
+              <div class="mb-3">
+                  <label for="preco" class="form-label">Valor</label>
+                  <input type="number" class="form-control" id="preco" name="valor" value="{{produtos.valor}}">
+              </div>
+
+              <div class="mb-3">
+                  <input class="form-control" type="file" name="imagem">
+              </div>
+
+              <input type="hidden" name="codigo" value="{{produtos.codigo}}">
+              <input type="hidden" name="imagemAntiga">
+
+              <button type="submit" class="btn btn-primary">Editar</button>
+          </form>
+      </div>
+  </main>
+  <!-- Lembrando que uso bootstrap porém tabém uso estilos no css para comprementar  -->
+```
+
+## 🔙 Passo 14: Criando a Rota de Cancelamento
+Se o usuário clicar em "Cancelar", queremos apenas redirecioná-lo de volta à página inicial:v
+
+### Botão para cancelar
+
+```html
+   <a href="/cancelar" class="btn btn-secondary">Cancelar</a>
+```
+
+### Rota para redirecionar e ocorer o cancelamento
+```js
+    //Rota para cancelar a edição do produtos
+  app.get('/cancelar', function(req, res){
+      res.redirect('/')
+  })
+
+
+```
+
+## 🔙 Passo 15: Fazendo a edição realmente do produto
+Até o momento, criamos apenas a rota e o formulário de edição, onde buscamos os dados existentes para pré-preencher os campos do formulário (input).
+Agora, vamos trabalhar com o método POST, pois nosso objetivo é atualizar os dados no banco.
+Devemos considerar que o usuário pode querer corrigir apenas um pequeno erro de digitação, ou talvez atualizar somente a imagem do produto. Por isso, nosso sistema de edição precisa ser flexível o suficiente para aceitar alterações parciais — atualizando apenas os campos que forem realmente modificados, sem sobrescrever os demais de forma desnecessária. 
 
 
