@@ -101,11 +101,11 @@ app.get('/remover/:codigo/:imagem', function (req, res) {
     let sql = `DELETE FROM produtos WHERE codigo = ${req.params.codigo}`
 
     const caminhoImagem = path.join(__dirname, 'image', req.params.imagem); //📦 path é um módulo nativo do Node.js que serve para trabalhar com caminhos de arquivos e pastas de forma segura e compatível com qualquer sistema operacional (Windows, Linux, Mac).
-    conexao.query(sql, function(erro, retorno){
-        if(erro) throw erro
+    conexao.query(sql, function (erro, retorno) {
+        if (erro) throw erro
 
         //O Fs.unlink faz a remoção de um arquivo pode ser de texto, imagem, pdf, pasta. Eu passo 2 informações o local que esta o arquivo e uma função callBack que é obrigatoria que ira tratar de error
-        fs.unlink(caminhoImagem, (erro)=>{
+        fs.unlink(caminhoImagem, (erro) => {
             if (erro) {
                 console.log('Falha ao remover a imagem:', erro);
             } else {
@@ -119,12 +119,12 @@ app.get('/remover/:codigo/:imagem', function (req, res) {
 })
 
 //Rota para ir  editar produto
-app.get('/editar/:codigo/:imagem', function(req, res){
+app.get('/editar/:codigo/:imagem', function (req, res) {
     let sql = `SELECT * FROM produtos WHERE codigo = ${req.params.codigo}`
     const caminhoImagem = path.join(__dirname, 'image', req.params.imagem)
 
-    conexao.query(sql, function(erro, retorno){
-        if(erro) throw erro
+    conexao.query(sql, function (erro, retorno) {
+        if (erro) throw erro
         console.log(retorno)
         res.render('form-editar', {
             produtos: retorno[0]
@@ -134,15 +134,20 @@ app.get('/editar/:codigo/:imagem', function(req, res){
 })
 
 //Rota para alteração de produtos
-app.post('/alterar', function(req, res){
-//obeter os dados do formulário
+app.post('/alterar', function (req, res) {
+    //obeter os dados do formulário
+    const { produto, valor, codigo, nomeImagem } = req.body
 
+    let nomeImagemFinal = nomeImagem
 
+    //Verifica se o usuario enviou uma nova imagem
+    
+   
 })
 
 
 //Rota para cancelar a edição do produtos
-app.get('/cancelar', function(req, res){
+app.get('/cancelar', function (req, res) {
     res.redirect('/')
 })
 

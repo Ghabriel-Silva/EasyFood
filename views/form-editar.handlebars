@@ -1,10 +1,10 @@
-
 <main>
     <div class="container mt-3">
         <div class=" img-edite mb-3 ">
-            <img src="/imagem/{{produtos.imagem}}" alt="Imagem do produto" class="img-fluid img" style="max-height: 100%;">
+            <img src="/imagem/{{produtos.imagem}}" alt="Imagem do produto" class="img-fluid img"
+                style="max-height: 100%;">
         </div>
-        <form action="/editar" method="POST" enctype="multipart/form-data"
+        <form action="/alterar" method="POST" enctype="multipart/form-data"
             class="max-width-custom bg-light p-3 rounded-2">
             <input type="hidden" name="nomeImagem" value="{{produtos.imagem}}">
             <div class="mb-3">
@@ -22,9 +22,10 @@
             </div>
 
             <input type="hidden" name="codigo" value="{{produtos.codigo}}">
-            <input type="hidden" name="imagemAntiga">
+            
 
-            <button href="/alterar" type="submit" class="btn btn-primary me-2 ">Alterar</button>
+            {{!-- Botao submite apenas ira enviar o post com dados atualizados --}}
+            <button type="submit" class="btn btn-primary me-2">Alterar</button>
             <a href="/cancelar" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>

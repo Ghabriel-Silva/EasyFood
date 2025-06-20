@@ -221,6 +221,8 @@ app.use(express.urlencoded({ extended: false }));
 
 ### 3️⃣ Instalando e configurando o upload expresso de arquivos
 
+O express-fileupload é um middleware do Node.js que permite que o Express receba arquivos enviados por formulários HTML com enctype="multipart/form-data" (como imagens, PDFs, etc.).
+
 ```bash
 # Middleware express simples para upload de arquivos
 npm install express-fileupload
@@ -234,6 +236,8 @@ const fileupload = require('express-fileupload');
 app.use(fileupload());
 ```
 
+ #### O que é middleware?
+  A palavra middleware vem de "meio" (middle) + "software". No contexto do Express.js, um middleware é uma função que roda entre o pedido (request) e a resposta (response) — ele pode modificar a requisição, a resposta, ou decidir se deve continuar para a próxima função.
 ---
 
 ### 4️⃣ Usando o upload no app.post 
@@ -596,4 +600,16 @@ Até o momento, criamos apenas a rota e o formulário de edição, onde buscamos
 Agora, vamos trabalhar com o método POST, pois nosso objetivo é atualizar os dados no banco.
 Devemos considerar que o usuário pode querer corrigir apenas um pequeno erro de digitação, ou talvez atualizar somente a imagem do produto. Por isso, nosso sistema de edição precisa ser flexível o suficiente para aceitar alterações parciais — atualizando apenas os campos que forem realmente modificados, sem sobrescrever os demais de forma desnecessária. 
 
+
+```html
+    <!-- Botao submite apenas ira enviar o post com dados atualizados  -->
+            <button type="submit" class="btn btn-primary me-2">Alterar</button>
+```
+
+
+```html
+    <!--Crio 2 input hidden apenas para enviar o codigo que vem do banco de dados e a imagem que também vem no caso o nomeImagem é a imagem Atual-->
+          <input type="hidden" name="nomeImagem" value="{{produtos.imagem}}"> >
+          <input type="hidden" name="codigo" value="{{produtos.codigo}}">
+```
 
