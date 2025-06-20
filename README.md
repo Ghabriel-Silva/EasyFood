@@ -238,6 +238,8 @@ app.use(fileupload());
 
  #### O que é middleware?
   A palavra middleware vem de "meio" (middle) + "software". No contexto do Express.js, um middleware é uma função que roda entre o pedido (request) e a resposta (response) — ele pode modificar a requisição, a resposta, ou decidir se deve continuar para a próxima função.
+
+
 ---
 
 ### 4️⃣ Usando o upload no app.post 
@@ -612,4 +614,57 @@ Devemos considerar que o usuário pode querer corrigir apenas um pequeno erro de
           <input type="hidden" name="nomeImagem" value="{{produtos.imagem}}"> >
           <input type="hidden" name="codigo" value="{{produtos.codigo}}">
 ```
+```js
+app.post('/alterar', function (req, res) {
+    const { produto, valor, codigo, nomeImagem } = req.body;
+
+    // Verifica se foi enviada uma nova imagem
+    if (req.files && req.files.imagem) {
+        const imagem = req.files.imagem;
+        const novoNomeImagem = Date.now() + '-' + imagem.name; // evita conflito
+
+        const sql = `UPDATE produtos SET nome='${produto}', valor=${valor}, codigo=${codigo}, imagem='${novoNomeImagem}' WHERE codigo=${codigo}`;
+
+        conexao.query(sql, function (erro, retorno) {
+            if (erro) {
+                console.error('Erro ao atualizar produto:', erro);
+                return res.status(500).send('Erro no banco de dados.');
+            }
+
+            // Caminho da imagem antiga
+            const caminhoImagemAntiga = path.join(__dirname, 'image', nomeImagem);
+
+            // Remover a imagem antiga, se existir
+            if (fs.existsSync(caminhoImagemAntiga)) {
+                fs.unlink(caminhoImagemAntiga, (erro) => {
+                    if (erro) {
+                        console.log('Erro ao remover imagem antiga:', erro);
+                    }
+                });
+            }
+
+            // Salvar a nova imagem
+            imagem.mv(path.join(__dirname, 'image', novoNomeImagem), (err) => {
+                if (err) {
+                    console.error('Erro ao salvar nova imagem:', err);
+                    return res.status(500).send('Erro ao salvar nova imagem.');
+                }
+
+                res.redirect('/');
+            });
+        });
+    } else {
+        // Caso não tenha enviado nova imagem
+        const sql = `UPDATE produtos SET nome='${produto}', valor=${valor}, codigo=${codigo} WHERE codigo=${codigo}`;
+
+        conexao.query(sql, function (erro, retorno) {
+            if (erro) {
+                console.error('Erro ao atualizar produto (sem imagem):', erro);
+                return res.status(500).send('Erro no banco de dados.');
+            }
+
+            res.redirect('/');
+        });
+    }
+});
 

@@ -121,7 +121,6 @@ app.get('/remover/:codigo/:imagem', function (req, res) {
 //Rota para ir  editar produto
 app.get('/editar/:codigo/:imagem', function (req, res) {
     let sql = `SELECT * FROM produtos WHERE codigo = ${req.params.codigo}`
-    const caminhoImagem = path.join(__dirname, 'image', req.params.imagem)
 
     conexao.query(sql, function (erro, retorno) {
         if (erro) throw erro
@@ -133,18 +132,51 @@ app.get('/editar/:codigo/:imagem', function (req, res) {
 
 })
 
-//Rota para alteração de produtos
+// Rota para alteração de produtos
 app.post('/alterar', function (req, res) {
-    //obeter os dados do formulário
-    const { produto, valor, codigo, nomeImagem } = req.body
+    const { produto, valor, codigo, nomeImagem } = req.body;
 
-    let nomeImagemFinal = nomeImagem
+    if (req.files && req.files.imagem) { //  req.files=>	O formulário enviou arquivos no caso do input, o files é um objeto  //req.files.imagem=> O campo de imagem foi preenchido com um arquivo
+        const dataFormatada = dataAtual.toISOString().split('T')[0]; // "2025-06-19"
+        const imagem = req.files.imagem //Atribuo a imagem que recebo da requisição 
+        const novoNomeImagem = `${dataFormatada}-${imagem.name}`
 
-    //Verifica se o usuario enviou uma nova imagem
-    
-   
-})
+        const sql = `UPDATE produtos SET nome='${produto}', valor=${valor}, codigo=${codigo}, imagem='${novoNomeImagem}' WHERE codigo=${codigo}`;
 
+        //Executando a eecução
+        conexao.query(sql, function(erro, retorno){
+            if(erro){
+                console.error('Erro ao atualizar produtos:', erro)
+                return  res.status(500).send('Erro no Banco de Dados.')
+            }
+
+            //Caminho antigo da imagem
+            const caminhoImagemAntiga = path.join(__dirname, 'image', nomeImagem)
+
+            // Remover a imagem antiga, se existir
+            if(fs.existsSync(caminhoImagemAntiga)){
+                fs.unlink(caminhoImagemAntiga, (erro)=>{
+                    if (erro) {
+                        console.log('Erro ao remover imagem antiga:', erro);
+                    }
+                })
+            }
+
+            //Salvar a nova imagem
+            imagem.mv(path.join(__dirname, 'image', nomeImagem), (err)=>{
+                if (err) {
+                    console.error('Erro ao salvar nova imagem:', err);
+                    return res.status(500).send('Erro ao salvar nova imagem.');
+                }
+
+                res.redirect('/');
+            })
+        })
+
+
+
+    }
+});
 
 //Rota para cancelar a edição do produtos
 app.get('/cancelar', function (req, res) {
