@@ -2,6 +2,16 @@
     <div class="container  mt-3">
         <form action="/cadastrar" method="POST" enctype="multipart/form-data"
             class="max-width-custom   bg-light  p-3 rounded-2 ">
+
+            {{#if success_msg}}
+            <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
+            {{/if}}
+
+            {{#if error_msg}}
+            <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
+            {{/if}}
+
+
             <div class="mb-3">
                 <label for="produto" class="form-label">Produto</label>
                 <input type="text" class="form-control" id="produto" aria-describedby="emailHelp" name="produto">
@@ -16,19 +26,19 @@
             <button type="submity" class="btn btn-primary ">Adcionar</button>
         </form>
     </div>
-    <div class="container pt-5" >
-        <div class="d-flex flex-wrap justify-content-center align-items-center  gap-3"  >
-                {{#each produtos}}
-                    <div class="card" style="width: 18rem;">
-                    <img src="/imagem/{{imagem}}" class="card-img-top" alt="blus verde">
-                    <div class="card-body">
-                        <h5 class="card-title">{{nome}}</h5>
-                        <p class="card-text"> {{valor}} R$</p>
-                        <a href="/editar/{{codigo}}/{{imagem}}" class="btn btn-warning">Editar</a>
-                        <a href="/remover/{{codigo}}/{{imagem}}" class="btn btn-danger">Remover</a>
-                    </div>
+    <div class="container pt-5">
+        <div class="d-flex flex-wrap justify-content-center align-items-center  gap-3">
+            {{#each produtos}}
+            <div class="card" style="width: 18rem;">
+                <img src="/imagem/{{imagem}}" class="card-img-top" alt="blus verde">
+                <div class="card-body">
+                    <h5 class="card-title">{{nome}}</h5>
+                    <p class="card-text"> {{valor}} R$</p>
+                    <a href="/editar/{{codigo}}/{{imagem}}" class="btn btn-warning">Editar</a>
+                    <a href="/remover/{{codigo}}/{{imagem}}" class="btn btn-danger">Remover</a>
                 </div>
-                {{/each}}
+            </div>
+            {{/each}}
         </div>
     </div>
 </main>

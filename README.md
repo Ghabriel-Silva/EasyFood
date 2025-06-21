@@ -67,7 +67,7 @@ const mysql = require('mysql2');
 const conexao = mysql.createConnection({
     host: 'localhost',
     user: 'root', 
-    password: '@Gs189970', 
+    password: 'suasenhaqui', 
     database: 'projeto'
 });
 
@@ -610,61 +610,246 @@ Devemos considerar que o usuário pode querer corrigir apenas um pequeno erro de
 
 
 ```html
-    <!--Crio 2 input hidden apenas para enviar o codigo que vem do banco de dados e a imagem que também vem no caso o nomeImagem é a imagem Atual-->
+    <!--Crio 2 input hidden apenas para enviar o codigo que vem do banco de dados e a imagem que também vem,  no caso o nomeImagem é a imagem Atual-->
           <input type="hidden" name="nomeImagem" value="{{produtos.imagem}}"> >
           <input type="hidden" name="codigo" value="{{produtos.codigo}}">
 ```
 ```js
+    // Rota para alteração de produtos
 app.post('/alterar', function (req, res) {
     const { produto, valor, codigo, nomeImagem } = req.body;
 
-    // Verifica se foi enviada uma nova imagem
-    if (req.files && req.files.imagem) {
-        const imagem = req.files.imagem;
+    if (req.files && req.files.imagem) { //  req.files=>	O formulário enviou arquivos no caso do input, o files é um objeto  //req.files.imagem=> O campo de imagem foi preenchido com um arquivo
+        const imagem = req.files.imagem //Atribuo a imagem que recebo da requisição 
         const novoNomeImagem = Date.now() + '-' + imagem.name; // evita conflito
+         const sql = `UPDATE produtos SET nome=?, valor=?, codigo=?, imagem=? WHERE codigo=?`;
 
-        const sql = `UPDATE produtos SET nome='${produto}', valor=${valor}, codigo=${codigo}, imagem='${novoNomeImagem}' WHERE codigo=${codigo}`;
+        const valores = [produto, valor, codigo, novoNomeImagem, codigo]
 
-        conexao.query(sql, function (erro, retorno) {
-            if (erro) {
-                console.error('Erro ao atualizar produto:', erro);
-                return res.status(500).send('Erro no banco de dados.');
+        //Executando a eecução
+        conexao.query(sql, valores,  function(erro, retorno){
+            if(erro){
+                console.error('Erro ao atualizar produtos:', erro)
+                return  res.status(500).send('Erro no Banco de Dados.')
             }
 
-            // Caminho da imagem antiga
-            const caminhoImagemAntiga = path.join(__dirname, 'image', nomeImagem);
+            //Caminho antigo da imagem
+            const caminhoImagemAntiga = path.join(__dirname, 'image', nomeImagem)
 
             // Remover a imagem antiga, se existir
-            if (fs.existsSync(caminhoImagemAntiga)) {
-                fs.unlink(caminhoImagemAntiga, (erro) => {
+            if(fs.existsSync(caminhoImagemAntiga)){
+                fs.unlink(caminhoImagemAntiga, (erro)=>{
                     if (erro) {
                         console.log('Erro ao remover imagem antiga:', erro);
                     }
-                });
+                })
             }
 
-            // Salvar a nova imagem
-            imagem.mv(path.join(__dirname, 'image', novoNomeImagem), (err) => {
+            //Salvar a nova imagem
+            imagem.mv(path.join(__dirname, 'image', novoNomeImagem), (err)=>{
                 if (err) {
                     console.error('Erro ao salvar nova imagem:', err);
                     return res.status(500).send('Erro ao salvar nova imagem.');
                 }
-
                 res.redirect('/');
-            });
-        });
-    } else {
-        // Caso não tenha enviado nova imagem
-        const sql = `UPDATE produtos SET nome='${produto}', valor=${valor}, codigo=${codigo} WHERE codigo=${codigo}`;
-
-        conexao.query(sql, function (erro, retorno) {
-            if (erro) {
-                console.error('Erro ao atualizar produto (sem imagem):', erro);
-                return res.status(500).send('Erro no banco de dados.');
+            })
+        })
+    }else{
+        //Se nao for atualizado
+        const sql = `UPDATE produtos SET nome=?, valor=?, codigo=? WHERE codigo=?`;
+        const valores = [produto, valor, codigo, codigo]
+        conexao.query(sql,valores,  function(erro, retorno){
+            if(erro){
+                console.log('A imagem não foi atualizada')
             }
-
             res.redirect('/');
-        });
+        })
+    }
+
+});
+```
+### 🔐 Proteção contra SQL Injection
+
+SQL Injection é uma técnica maliciosa usada para manipular consultas SQL inserindo comandos diretamente nos campos de entrada (como inputs de formulários). Se os dados do usuário forem inseridos diretamente nas consultas SQL, o sistema pode ser comprometido — revelando, alterando ou até excluindo dados importantes do banco.
+
+Para evitar esse risco, usamos queries parametrizadas com ?, que separam o comando SQL dos dados enviados pelo usuário. Isso garante que os dados sejam tratados como valores comuns e não como parte do código SQL.
+
+
+
+## Passo 16: Imprementando mensagem de validações
+
+# Sistema de Mensagens Flash com Express, Handlebars e JavaScript
+
+Este guia mostra como configurar mensagens temporárias (flash messages) para mostrar feedbacks de sucesso ou erro em seu site usando Express, Handlebars e JavaScript.
+
+---
+
+## 1. Instalar Dependências
+
+No terminal, rode:
+
+```bash
+npm install express-session connect-flash
+```
+
+Essas bibliotecas ajudam a armazenar mensagens entre requisições.
+
+---
+
+## 2. Configuração no app.js
+
+No topo do arquivo, importe as libs:
+
+```js
+const session = require('express-session');
+const flash = require('connect-flash');
+```
+> express-session: Essa biblioteca cria sessões para cada usuário que acessa seu site. Uma sessão é uma forma de manter dados temporários relacionados a esse usuário enquanto ele navega entre páginas (por exemplo, dados de login, carrinho de compras, ou mensagens temporárias).
+
+> connect-flash: Essa biblioteca usa as sessões criadas pelo express-session para armazenar mensagens temporárias chamadas de flash messages. Essas mensagens duram apenas até a próxima requisição, ou seja, aparecem em uma página e somem depois.
+
+
+Configure os middlewares logo após criar o app:
+
+```js
+app.use(session({
+    secret: '@qualquercoisaaqui', // Chave secreta para proteger a sessão (deve ser algo difícil de adivinhar)
+    resave: false, // Não salva a sessão se nada foi modificado, para evitar overhead desnecessário
+    saveUninitialized: true  //Salva sessões novas, mesmo que não tenham dados, para garantir compatibilidade
+}));
+app.use(flash());
+```
+- **app.use(session({...})):**  Aqui você configura o middleware que vai gerenciar as sessões. O secret é uma chave secreta usada internamente para assinar os cookies da sessão e garantir que ninguém falsifique os dados.
+ 
+- **resave: false:** Evita que a sessão seja salva no servidor se não houve nenhuma modificação, otimizando desempenho.
+
+-**saveUninitialized: true:** Cria e salva uma nova sessão mesmo se ela estiver vazia. Isso ajuda no funcionamento correto das mensagens flash, já que elas dependem da sessão estar ativa.
+
+-**app.use(flash()):**Esse middleware ativa o connect-flash para que você possa criar mensagens temporárias usando req.flash() nas suas rotas.
+
+### O que cada coisa faz:
+
+- **express-session:** cria sessões para cada usuário, permitindo armazenar dados temporários.
+- **connect-flash:** usa a sessão para salvar mensagens temporárias entre requisições.
+-
+---
+
+## 3. Middleware para disponibilizar mensagens nas views
+
+Ainda no `app.js`, após o `app.use(flash())`, coloque:
+
+```js
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    next();
+});
+```
+
+Isso passa as mensagens para o template renderizado.
+
+---
+
+## 4. Mostrar as mensagens no Handlebars
+
+Dentro do seu template (ex: `form.handlebars`), adicione:
+
+```handlebars
+{{#if success_msg}}
+  <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
+{{/if}}
+
+{{#if error_msg}}
+  <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
+{{/if}}
+```
+
+---
+
+## 5. Criar o arquivo JavaScript para esconder a mensagem automaticamente
+
+### a) Crie um arquivo `flash.js` dentro da pasta `js` (pasta pública):
+
+```js
+window.addEventListener('DOMContentLoaded', () => {
+    const flash = document.getElementById('flash-msg');
+    if (flash) {
+        setTimeout(() => {
+            flash.classList.add('fade-out');
+            setTimeout(() => {
+                flash.remove(); // Remove do DOM após fade out
+            }, 500); // duração da transição
+        }, 3000); // tempo que a mensagem fica visível
     }
 });
+```
+
+### b) No seu CSS, adicione:
+
+```css
+.fade-out {
+  transition: opacity 0.5s ease;
+  opacity: 0;
+}
+```
+
+### c) No `app.js`, deixe a pasta `js` acessível:
+
+```js
+app.use('/js', express.static('./js'));
+```
+
+### d) No seu template, inclua o script antes do fechamento do `</body>`:
+
+```html
+<script src="/js/flash.js"></script>
+```
+
+---
+
+## 6. Exemplo de uso na rota de cadastro
+
+```js
+app.post('/cadastrar', function (req, res) {
+    const { produto, valor } = req.body;
+
+    // Validação simples dos campos e arquivo
+    if (!req.files || !req.files.imagem || !produto || !valor || produto.trim() === '' || valor.trim() === '') {
+        req.flash('error_msg', 'Todos campos devem ser preenchidos!');
+        return res.redirect('/');
+    }
+
+    let imagem = req.files.imagem.name;
+
+    const sql = `INSERT INTO produtos (nome, valor, imagem) VALUES (?, ?, ?)`;
+    const valores = [produto, valor, imagem];
+
+    conexao.query(sql, valores, function (erro, retorno) {
+        if (erro) {
+            req.flash('error_msg', 'Erro no banco de dados!');
+            return res.redirect('/');
+        }
+
+        req.files.imagem.mv(__dirname + '/image/' + imagem, (err) => {
+            if (err) {
+                req.flash('error_msg', 'Erro ao salvar imagem.');
+                return res.redirect('/');
+            }
+
+            req.flash('success_msg', 'Produto cadastrado com sucesso!');
+            res.redirect('/');
+        });
+    });
+});
+```
+
+---
+
+## Resultado esperado
+
+- Mensagens de sucesso e erro aparecem no topo da página.
+- Somem automaticamente após 3 segundos com efeito de fade out.
+- Facilidade para reutilizar em outras rotas (editar, remover, etc).
+
+---
 

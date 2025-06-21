@@ -13,12 +13,38 @@ const app = express()
 //Habilitando o upload de arquivos no app
 app.use(fileupload())
 
+
+//Usando o js
+app.use('/js', express.static('./js'))
+
 //importando o Handlebars
 const { engine } = require('express-handlebars')
 //Configuração do express handlebars
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
+
+
+//Configurações do uso das libs no app
+const session = require('express-session');
+const flash = require('connect-flash');
+
+//
+app.use(session({
+    secret: '@Gs189970',
+    resave: false,
+    saveUninitialized: true
+}));
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    next();
+});
+
+
 
 
 
@@ -38,7 +64,8 @@ app.use('/imagem', express.static('./image'))
 
 
 //importando módulo mysql2 
-const mysql = require('mysql2')
+const mysql = require('mysql2');
+const { connect } = require('http2');
 //Criando conexao
 const conexao = mysql.createConnection({
     host: 'localhost',
@@ -69,31 +96,43 @@ app.get('/', function (req, res) {
 })
 
 
+
+
+
 //Rota de cadastro 
 app.post('/cadastrar', function (req, res) {
     //Obter os dados que seram utilizados para cadastro
-    let produto = req.body.produto;
-    let valor = req.body.valor;
+    const { produto, valor } = req.body;
+
+    if (!req.files || !req.files.imagem || !produto || !valor || produto.trim() === '' || valor.trim() === '' ) {
+        req.flash('error_msg', 'Todos campos devem ser preenchidos!');
+        return res.redirect('/');
+    }
+
     let imagem = req.files.imagem.name;
 
-    //Sql 
-    let sql = `INSERT INTO produtos (nome, valor, imagem) VALUES ('${produto}', '${valor}', '${imagem}')`
 
+    const sql = `INSERT INTO produtos (nome, valor, imagem) VALUES (?, ?, ?)`;
+    const valores = [produto, valor, imagem];
 
     //Executar  comando no sql
-    conexao.query(sql, function (erro, retorno) {
-
+    conexao.query(sql, valores, function (erro, retorno) {
         //caso ocorra erro 
-        if (erro) throw erro
-
-        //caso ocorra o cadastro
-        req.files.imagem.mv(__dirname + '/image/' + req.files.imagem.name);
-        console.log(retorno)
+        if (erro) {
+            req.flash('error_msg', 'Erro no banco de dados!');
+            return res.redirect('/');
+        }
+        req.files.imagem.mv(__dirname + '/image/' + imagem, (err)=>{
+            if(err){
+                req.flash('error_msg', ' Erro ao salvar imagem.');
+                return res.redirect('/');
+            }
+        });
+        //Retornar para rota principal
+        req.flash('success_msg', ' Produto cadastrado com sucesso!');
+        res.redirect('/')
     })
-
-    //Retornar para rota principal
-    res.redirect('/')
-
+    
 })
 
 //Rota para remover produtos
@@ -137,25 +176,25 @@ app.post('/alterar', function (req, res) {
     const { produto, valor, codigo, nomeImagem } = req.body;
 
     if (req.files && req.files.imagem) { //  req.files=>	O formulário enviou arquivos no caso do input, o files é um objeto  //req.files.imagem=> O campo de imagem foi preenchido com um arquivo
-        const dataFormatada = dataAtual.toISOString().split('T')[0]; // "2025-06-19"
         const imagem = req.files.imagem //Atribuo a imagem que recebo da requisição 
-        const novoNomeImagem = `${dataFormatada}-${imagem.name}`
+        const novoNomeImagem = Date.now() + '-' + imagem.name; // evita conflito
+        const sql = `UPDATE produtos SET nome=?, valor=?, codigo=?, imagem=? WHERE codigo=?`;
 
-        const sql = `UPDATE produtos SET nome='${produto}', valor=${valor}, codigo=${codigo}, imagem='${novoNomeImagem}' WHERE codigo=${codigo}`;
+        const valores = [produto, valor, codigo, novoNomeImagem, codigo]
 
-        //Executando a eecução
-        conexao.query(sql, function(erro, retorno){
-            if(erro){
+        //Executando a execução
+        conexao.query(sql, valores, function (erro, retorno) {
+            if (erro) {
                 console.error('Erro ao atualizar produtos:', erro)
-                return  res.status(500).send('Erro no Banco de Dados.')
+                return res.status(500).send('Erro no Banco de Dados.')
             }
 
             //Caminho antigo da imagem
             const caminhoImagemAntiga = path.join(__dirname, 'image', nomeImagem)
 
             // Remover a imagem antiga, se existir
-            if(fs.existsSync(caminhoImagemAntiga)){
-                fs.unlink(caminhoImagemAntiga, (erro)=>{
+            if (fs.existsSync(caminhoImagemAntiga)) {
+                fs.unlink(caminhoImagemAntiga, (erro) => {
                     if (erro) {
                         console.log('Erro ao remover imagem antiga:', erro);
                     }
@@ -163,19 +202,27 @@ app.post('/alterar', function (req, res) {
             }
 
             //Salvar a nova imagem
-            imagem.mv(path.join(__dirname, 'image', nomeImagem), (err)=>{
+            imagem.mv(path.join(__dirname, 'image', novoNomeImagem), (err) => {
                 if (err) {
                     console.error('Erro ao salvar nova imagem:', err);
                     return res.status(500).send('Erro ao salvar nova imagem.');
                 }
-
                 res.redirect('/');
             })
         })
+    } else {
+        //Se nao for atualizado
+        const sql = `UPDATE produtos SET nome=?, valor=?, codigo=? WHERE codigo=?`;
+        const valores = [produto, valor, codigo, codigo]
 
-
-
+        conexao.query(sql, valores, function (erro, retorno) {
+            if (erro) {
+                console.log('A imagem não foi atualizada')
+            }
+            res.redirect('/');
+        })
     }
+
 });
 
 //Rota para cancelar a edição do produtos
@@ -188,3 +235,4 @@ app.get('/cancelar', function (req, res) {
 app.listen(8080, function () {
     console.log('servidor rodando...')
 })
+
