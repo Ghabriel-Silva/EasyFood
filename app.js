@@ -104,7 +104,7 @@ app.post('/cadastrar', function (req, res) {
     //Obter os dados que seram utilizados para cadastro
     const { produto, valor } = req.body;
 
-    if (!req.files || !req.files.imagem || !produto || !valor || produto.trim() === '' || valor.trim() === '' ) {
+    if (!req.files || !req.files.imagem || !produto || !valor || produto.trim() === '' || valor.trim() === '') {
         req.flash('error_msg', 'Todos campos devem ser preenchidos!');
         return res.redirect('/');
     }
@@ -122,8 +122,8 @@ app.post('/cadastrar', function (req, res) {
             req.flash('error_msg', 'Erro no banco de dados!');
             return res.redirect('/');
         }
-        req.files.imagem.mv(__dirname + '/image/' + imagem, (err)=>{
-            if(err){
+        req.files.imagem.mv(__dirname + '/image/' + imagem, (err) => {
+            if (err) {
                 req.flash('error_msg', ' Erro ao salvar imagem.');
                 return res.redirect('/');
             }
@@ -132,7 +132,7 @@ app.post('/cadastrar', function (req, res) {
         req.flash('success_msg', ' Produto cadastrado com sucesso!');
         res.redirect('/')
     })
-    
+
 })
 
 //Rota para remover produtos
@@ -175,53 +175,31 @@ app.get('/editar/:codigo/:imagem', function (req, res) {
 app.post('/alterar', function (req, res) {
     const { produto, valor, codigo, nomeImagem } = req.body;
 
-    if (req.files && req.files.imagem) { //  req.files=>	O formulário enviou arquivos no caso do input, o files é um objeto  //req.files.imagem=> O campo de imagem foi preenchido com um arquivo
-        const imagem = req.files.imagem //Atribuo a imagem que recebo da requisição 
-        const novoNomeImagem = Date.now() + '-' + imagem.name; // evita conflito
-        const sql = `UPDATE produtos SET nome=?, valor=?, codigo=?, imagem=? WHERE codigo=?`;
+    // Primeiro buscar os dados atuais do produto 
+    conexao.query('SELECT * FROM produtos WHERE codigo = ?', [codigo], function (err, resultado) {
+        if(err){ //Caso tenha erro ao buscar o produto no banco de dados
+            console.error('Erro ao buscar Dados atuais no banco de dados')
+            req.flash('error-msg', 'Produto não encontrado')
+            return res.redirect('/')
+        }
+        if(resultado.length === 0 ){ //Se nenhum produto com codigo = atual existir, resultados será um array vazio, ou seja: [].
+            req.flash('error_msg', 'Produto não encontrado');
+            return res.redirect('/')
+        }
 
-        const valores = [produto, valor, codigo, novoNomeImagem, codigo]
+        const produtoAtual = resultado[0] //Pego o primeiro item do array
 
-        //Executando a execução
-        conexao.query(sql, valores, function (erro, retorno) {
-            if (erro) {
-                console.error('Erro ao atualizar produtos:', erro)
-                return res.status(500).send('Erro no Banco de Dados.')
-            }
+        // Verifica se veio uma imagem nova no upload
+        const novaImagem = (req.files && req.files.imagem) ? req.files.imagem : null 
 
-            //Caminho antigo da imagem
-            const caminhoImagemAntiga = path.join(__dirname, 'image', nomeImagem)
+         // Verificar se houve alteração em algum campo
+         const textoMudou = (produto !== produtoAtual.nome) || (valor  !== produtoAtual.valor)
+         const imagemMudou = novaImagem !== null
 
-            // Remover a imagem antiga, se existir
-            if (fs.existsSync(caminhoImagemAntiga)) {
-                fs.unlink(caminhoImagemAntiga, (erro) => {
-                    if (erro) {
-                        console.log('Erro ao remover imagem antiga:', erro);
-                    }
-                })
-            }
+         
 
-            //Salvar a nova imagem
-            imagem.mv(path.join(__dirname, 'image', novoNomeImagem), (err) => {
-                if (err) {
-                    console.error('Erro ao salvar nova imagem:', err);
-                    return res.status(500).send('Erro ao salvar nova imagem.');
-                }
-                res.redirect('/');
-            })
-        })
-    } else {
-        //Se nao for atualizado
-        const sql = `UPDATE produtos SET nome=?, valor=?, codigo=? WHERE codigo=?`;
-        const valores = [produto, valor, codigo, codigo]
 
-        conexao.query(sql, valores, function (erro, retorno) {
-            if (erro) {
-                console.log('A imagem não foi atualizada')
-            }
-            res.redirect('/');
-        })
-    }
+    })
 
 });
 

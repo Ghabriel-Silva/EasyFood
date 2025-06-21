@@ -678,7 +678,7 @@ Para evitar esse risco, usamos queries parametrizadas com ?, que separam o coman
 
 ## Passo 16: Imprementando mensagem de validações
 
-# Sistema de Mensagens Flash com Express, Handlebars e JavaScript
+### Sistema de Mensagens Flash com Express, Handlebars e JavaScript
 
 Este guia mostra como configurar mensagens temporárias (flash messages) para mostrar feedbacks de sucesso ou erro em seu site usando Express, Handlebars e JavaScript.
 
@@ -719,6 +719,7 @@ app.use(session({
 }));
 app.use(flash());
 ```
+Você pode salvar e recuperar informações temporárias (como as mensagens flash) com req.session, ou com bibliotecas que dependem disso — como connect-flash.
 - **app.use(session({...})):**  Aqui você configura o middleware que vai gerenciar as sessões. O secret é uma chave secreta usada internamente para assinar os cookies da sessão e garantir que ninguém falsifique os dados.
  
 - **resave: false:** Evita que a sessão seja salva no servidor se não houve nenhuma modificação, otimizando desempenho.
@@ -743,7 +744,7 @@ app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     next();
-});
+}); //Isso torna as mensagens disponíveis nas suas views (ex: Handlebars).
 ```
 
 Isso passa as mensagens para o template renderizado.
@@ -815,8 +816,8 @@ app.post('/cadastrar', function (req, res) {
 
     // Validação simples dos campos e arquivo
     if (!req.files || !req.files.imagem || !produto || !valor || produto.trim() === '' || valor.trim() === '') {
-        req.flash('error_msg', 'Todos campos devem ser preenchidos!');
-        return res.redirect('/');
+        req.flash('error_msg', 'Todos campos devem ser preenchidos!'); //Isso guarda temporariamente a mensagem numa sessão.
+        return res.redirect('/'); // Mas não mostra nada ainda, porque você redirecionou.
     }
 
     let imagem = req.files.imagem.name;
@@ -853,3 +854,87 @@ app.post('/cadastrar', function (req, res) {
 
 ---
 
+
+
+app.post('/alterar', function (req, res) {
+    const { produto, valor, codigo, nomeImagem } = req.body;
+
+    // Primeiro buscar os dados atuais do produto
+    conexao.query('SELECT * FROM produtos WHERE codigo = ?', [codigo], function (erro, resultados) {
+        if (erro) {
+            console.error('Erro ao buscar produto:', erro);
+            req.flash('error_msg', 'Erro no Banco de Dados.');
+            return res.redirect('/');
+        }
+
+        if (resultados.length === 0) {
+            req.flash('error_msg', 'Produto não encontrado.');
+            return res.redirect('/');
+        }
+
+        const produtoAtual = resultados[0];
+
+        // Verifica se veio uma imagem nova no upload
+        const novaImagem = (req.files && req.files.imagem) ? req.files.imagem : null;
+
+        // Verificar se houve alteração em algum campo
+        const textoMudou = (produto !== produtoAtual.nome) || (valor != produtoAtual.valor); // valor != para permitir comparar string e number
+        const imagemMudou = novaImagem !== null;
+
+        if (!textoMudou && !imagemMudou) {
+            // Nenhuma alteração
+            req.flash('error_msg', 'Nenhuma alteração detectada.');
+            return res.redirect('/');
+        }
+
+        if (imagemMudou) {
+            // Se mudou a imagem, montar novo nome dela
+            const novoNomeImagem = Date.now() + '-' + novaImagem.name;
+
+            const sql = `UPDATE produtos SET nome=?, valor=?, imagem=? WHERE codigo=?`;
+            const valores = [produto, valor, novoNomeImagem, codigo];
+
+            conexao.query(sql, valores, function (erro, retorno) {
+                if (erro) {
+                    console.error('Erro ao atualizar produtos:', erro);
+                    req.flash('error_msg', 'Erro ao atualizar produto.');
+                    return res.redirect('/');
+                }
+
+                // Remover imagem antiga
+                const caminhoImagemAntiga = path.join(__dirname, 'image', produtoAtual.imagem);
+                if (fs.existsSync(caminhoImagemAntiga)) {
+                    fs.unlink(caminhoImagemAntiga, (erro) => {
+                        if (erro) console.log('Erro ao remover imagem antiga:', erro);
+                    });
+                }
+
+                // Salvar nova imagem
+                novaImagem.mv(path.join(__dirname, 'image', novoNomeImagem), (err) => {
+                    if (err) {
+                        console.error('Erro ao salvar nova imagem:', err);
+                        req.flash('error_msg', 'Erro ao salvar nova imagem.');
+                        return res.redirect('/');
+                    }
+
+                    req.flash('success_msg', 'Produto atualizado com sucesso!');
+                    return res.redirect('/');
+                });
+            });
+        } else {
+            // Se mudou só texto (produto ou valor)
+            const sql = `UPDATE produtos SET nome=?, valor=? WHERE codigo=?`;
+            const valores = [produto, valor, codigo];
+
+            conexao.query(sql, valores, function (erro, retorno) {
+                if (erro) {
+                    console.error('Erro ao atualizar produto:', erro);
+                    req.flash('error_msg', 'Erro ao atualizar produto.');
+                    return res.redirect('/');
+                }
+                req.flash('success_msg', 'Produto atualizado com sucesso!');
+                return res.redirect('/');
+            });
+        }
+    });
+});
