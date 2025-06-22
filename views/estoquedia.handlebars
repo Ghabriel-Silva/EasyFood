@@ -1,0 +1,24 @@
+<main > 
+    <div  class="max-width-custom ">
+        {{#if success_msg}}
+        <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
+        {{/if}}
+        {{#if error_msg}}
+        <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
+        {{/if}}
+        <div class="container pt-5">
+            <div class="d-flex flex-wrap justify-content-center align-items-center  gap-3">
+                {{#each produtos}}
+                <div class="card" style="width: 18rem;">
+                    <img src="/imagem/{{imagem}}" class="card-img-top" alt="blus verde">
+                    <div class="card-body">
+                        <h5 class="card-title">{{nome}}</h5>
+                        <p class="card-text"> {{valor}} R$</p>
+                        <a href="/editar/{{codigo}}/{{imagem}}" class="btn btn-warning">Editar</a>
+                        <a href="/remover/{{codigo}}/{{imagem}}" class="btn btn-danger">Remover</a>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+    </div>
+</main>
