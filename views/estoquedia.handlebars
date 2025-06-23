@@ -1,24 +1,37 @@
-<main > 
-    <div  class="max-width-custom ">
+<main>
+    <div class="max-width-custom">
         {{#if success_msg}}
         <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
         {{/if}}
         {{#if error_msg}}
         <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
         {{/if}}
+
         <div class="container pt-5">
-            <div class="d-flex flex-wrap justify-content-center align-items-center  gap-3">
+            <div class="d-flex flex-wrap justify-content-center gap-4">
                 {{#each produtos}}
-                <div class="card" style="width: 18rem;">
-                    <img src="/imagem/{{imagem}}" class="card-img-top" alt="blus verde">
+                <div class="card shadow-sm border border-light" style="width: 18rem; border-radius: 12px;">
+                    <img src="/imagem/{{imagem}}" class="card-img-top rounded-top" alt="{{nome}}"
+                        style="height: 180px; object-fit: cover;">
+
                     <div class="card-body">
-                        <h5 class="card-title">{{nome}}</h5>
-                        <p class="card-text"> {{valor}} R$</p>
-                        <a href="/editar/{{codigo}}/{{imagem}}" class="btn btn-warning">Editar</a>
-                        <a href="/remover/{{codigo}}/{{imagem}}" class="btn btn-danger">Remover</a>
+                        <h5 class="card-title text-primary fw-bold text-center">{{nome}}</h5>
+
+                        <p class="mb-1 text-center">
+                            <strong>Valor:</strong> {{valor}} R$
+                        </p>
+                        <p class="mb-3 text-center">
+                            <strong>Estoque:</strong> {{quantidade}} {{unidade_medida}}
+                        </p>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="/editar/{{codigo}}/{{imagem}}" class="btn btn-warning w-100 me-1">Editar</a>
+                            <a href="/remover/{{codigo}}/{{imagem}}" class="btn btn-danger w-100 ms-1">Remover</a>
+                        </div>
                     </div>
                 </div>
                 {{/each}}
             </div>
+        </div>
     </div>
 </main>

@@ -89,7 +89,7 @@ app.get('/', function (req, res) {
     res.render('form') //Retorno o formulario e vou retornar um json contendo todos produtos
 })
 
-//Rota de pedidos recebidos
+//Rota de estoque onde recebo os cadastros
 app.get('/estoquedia', function (req, res) {
     const sql = 'SELECT * FROM produtos'
 
@@ -111,9 +111,14 @@ app.get('/estoquedia', function (req, res) {
 //Rota de cadastro 
 app.post('/cadastrar', function (req, res) {
     //Obter os dados que seram utilizados para cadastro
-    const { produto, valor } = req.body;
+    const { produto, valor, quantidade, unidade } = req.body;
+   const unidadeValidadas = ['kg', 'g', 'un', 'n']
+   // Verifica se a unidade está dentro dos valores permitidos
+   const myUnidade = unidadeValidadas.includes(unidade)
 
-    if (!req.files || !req.files.imagem || !produto || !valor || produto.trim() === '' || valor.trim() === '') {
+
+
+    if (!req.files || !req.files.imagem || !produto || !valor || !quantidade || !myUnidade|| produto.trim() === '' || valor.trim() === '' || quantidade.trim() === '') {
         req.flash('error_msg', 'Todos campos devem ser preenchidos!');
         return res.redirect('/');
     }
@@ -121,8 +126,8 @@ app.post('/cadastrar', function (req, res) {
     let imagem = req.files.imagem.name;
 
 
-    const sql = `INSERT INTO produtos (nome, valor, imagem) VALUES (?, ?, ?)`;
-    const valores = [produto, valor, imagem];
+    const sql = `INSERT INTO produtos (nome, valor, imagem, quantidade, unidade_medida) VALUES (?, ?, ?,?,?)`;
+    const valores = [produto, valor, imagem, quantidade, unidade ];
 
     //Executar  comando no sql
     conexao.query(sql, valores, function (erro, retorno) {
