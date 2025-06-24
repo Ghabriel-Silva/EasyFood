@@ -1,5 +1,5 @@
-<main>
-    <div class="max-width-custom">
+<main >
+    <div class="estoque-width  ">
         {{#if success_msg}}
         <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
         {{/if}}
@@ -7,7 +7,10 @@
         <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
         {{/if}}
 
-        <div class="container pt-5">
+
+        <div class="container pt-5  "   >
+            {{!-- se tiver produtos executo isso no caso é verificado se tem algo dentro do array --}}
+            {{#if produtos.length}}
             <div class="d-flex flex-wrap justify-content-center gap-4">
                 {{#each produtos}}
                 <div class="card shadow-sm border border-light" style="width: 18rem; border-radius: 12px;">
@@ -26,12 +29,47 @@
 
                         <div class="d-flex justify-content-between">
                             <a href="/editar/{{codigo}}/{{imagem}}" class="btn btn-warning w-100 me-1">Editar</a>
-                            <a href="/remover/{{codigo}}/{{imagem}}" class="btn btn-danger w-100 ms-1">Remover</a>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop">
+                                Remover
+                            </button>
+                    
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Remover</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Deseja remover {{nome}}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Não</button>
+                                            <a href="/remover/{{codigo}}/{{imagem}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
                 {{/each}}
             </div>
+            {{!-- Se não tiver nada executo a mensagem abaixo! --}}
+            {{else}}
+            <div class="alert alert-info text-center" role="alert">
+                Nenhum produto em estoque. <a href="/" class="fw-bold">Clique aqui para adicionar</a>.
+            </div>
+            {{/if}}
+
         </div>
     </div>
 </main>

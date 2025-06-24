@@ -1,6 +1,6 @@
 <main>
     <div class="container mt-3">
-        
+
         <div class=" img-edite mb-3 ">
             <img src="/imagem/{{produtos.imagem}}" alt="Imagem do produto" class="img-fluid img"
                 style="max-height: 100%;">
@@ -15,7 +15,20 @@
 
             <div class="mb-3">
                 <label for="preco" class="form-label">Valor</label>
-                <input type="number" class="form-control" id="preco" name="valor" value="{{produtos.valor}}">
+                <input type="number" step="0.01"class="form-control" id="preco" name="valor" value="{{produtos.valor}}">
+            </div>
+            <div class="mb-3">
+                <label for="quantidade" class="form-label" >Quantidade</label>
+                <input type="number" step="0.01" class="form-control" id="quantidade" name="quantidade" value="{{produtos.quantidade}}">
+            </div>
+            <div class="mb-3">
+                <select class="form-select" aria-label="Default select example" name="unidade">
+                    <option selected  > {{produtos.unidade_medida}}</option>
+                    <option value="kg">Kilo</option>
+                    <option value="g">Gramas</option>
+                    <option value="un">Unidade</option>
+                    <option value="n">Nenhuma</option>
+                </select>
             </div>
 
             <div class="mb-3">
@@ -23,7 +36,7 @@
             </div>
 
             <input type="hidden" name="codigo" value="{{produtos.codigo}}">
-            
+
 
             {{!-- Botao submite apenas ira enviar o post com dados atualizados --}}
             <button type="submit" class="btn btn-primary me-2">Alterar</button>

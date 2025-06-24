@@ -17,6 +17,7 @@ app.use(fileupload())
 //Usando o js
 app.use('/js', express.static('./js'))
 
+
 //importando o Handlebars
 const { engine } = require('express-handlebars')
 //Configuração do express handlebars
@@ -112,13 +113,13 @@ app.get('/estoquedia', function (req, res) {
 app.post('/cadastrar', function (req, res) {
     //Obter os dados que seram utilizados para cadastro
     const { produto, valor, quantidade, unidade } = req.body;
-   const unidadeValidadas = ['kg', 'g', 'un', 'n']
-   // Verifica se a unidade está dentro dos valores permitidos
-   const myUnidade = unidadeValidadas.includes(unidade)
+    const unidadeValidadas = ['kg', 'g', 'un', 'n']
+    // Verifica se a unidade está dentro dos valores permitidos
+    const myUnidade = unidadeValidadas.includes(unidade)
 
 
 
-    if (!req.files || !req.files.imagem || !produto || !valor || !quantidade || !myUnidade|| produto.trim() === '' || valor.trim() === '' || quantidade.trim() === '') {
+    if (!req.files || !req.files.imagem || !produto || !valor || !quantidade || !myUnidade || produto.trim() === '' || valor.trim() === '' || quantidade.trim() === '') {
         req.flash('error_msg', 'Todos campos devem ser preenchidos!');
         return res.redirect('/');
     }
@@ -127,7 +128,7 @@ app.post('/cadastrar', function (req, res) {
 
 
     const sql = `INSERT INTO produtos (nome, valor, imagem, quantidade, unidade_medida) VALUES (?, ?, ?,?,?)`;
-    const valores = [produto, valor, imagem, quantidade, unidade ];
+    const valores = [produto, valor, imagem, quantidade, unidade];
 
     //Executar  comando no sql
     conexao.query(sql, valores, function (erro, retorno) {
@@ -151,10 +152,11 @@ app.post('/cadastrar', function (req, res) {
 
 //Rota para remover produtos
 app.get('/remover/:codigo/:imagem', function (req, res) {
-    let sql = `DELETE FROM produtos WHERE codigo = ${req.params.codigo}`
+    const sql = `DELETE FROM produtos WHERE codigo = ?`
+    const codigo = req.params.codigo //mando o codigo depois em um array separando o comando do valor 
 
     const caminhoImagem = path.join(__dirname, 'image', req.params.imagem); //📦 path é um módulo nativo do Node.js que serve para trabalhar com caminhos de arquivos e pastas de forma segura e compatível com qualquer sistema operacional (Windows, Linux, Mac).
-    conexao.query(sql, function (erro, retorno) {
+    conexao.query(sql, [codigo], function (erro, retorno) {
         if (erro) throw erro
 
         //O Fs.unlink faz a remoção de um arquivo pode ser de texto, imagem, pdf, pasta. Eu passo 2 informações o local que esta o arquivo e uma função callBack que é obrigatoria que ira tratar de error
@@ -167,9 +169,14 @@ app.get('/remover/:codigo/:imagem', function (req, res) {
         })
     })
 
+    req.flash('success_msg', 'Produto removido!')
     //Redirecionar
-    res.redirect('/')
+    res.redirect('/estoquedia')
 })
+
+
+
+
 
 //Rota para ir  editar produto
 app.get('/editar/:codigo/:imagem', function (req, res) {
@@ -177,7 +184,6 @@ app.get('/editar/:codigo/:imagem', function (req, res) {
 
     conexao.query(sql, function (erro, retorno) {
         if (erro) throw erro
-        console.log(retorno)
         res.render('form-editar', {
             produtos: retorno[0]
         })
@@ -187,7 +193,7 @@ app.get('/editar/:codigo/:imagem', function (req, res) {
 
 // Rota para alteração de produtos
 app.post('/alterar', function (req, res) {
-    const { produto, valor, codigo, nomeImagem } = req.body;
+    const { produto, valor, codigo, quantidade, unidade } = req.body;
 
     // Primeiro buscar os dados atuais do produto 
     conexao.query('SELECT * FROM produtos WHERE codigo = ?', [codigo], function (err, resultado) {
@@ -206,8 +212,10 @@ app.post('/alterar', function (req, res) {
         // Verifica se veio uma imagem nova no upload
         const novaImagem = (req.files && req.files.imagem) ? req.files.imagem : null
 
+
+        const condicaoTexto = (produto !== produtoAtual.nome) || (parseFloat(valor) !== parseFloat(produtoAtual.valor) || parseFloat(quantidade) !== parseFloat(produtoAtual.quantidade) || unidade !== produtoAtual.unidade_medida);
         // Verificar se houve alteração em algum campo
-        const textoMudou = (produto !== produtoAtual.nome) || (parseFloat(valor) !== parseFloat(produtoAtual.valor));
+        const textoMudou = condicaoTexto
         const imagemMudou = novaImagem !== null
 
         //Se nada mudou mostrar mensagem e redireciona
@@ -250,8 +258,8 @@ app.post('/alterar', function (req, res) {
             })
         } else {
             //Se mudou so o texto, produto, valor
-            const sql = `UPDATE produtos SET nome =?, valor=? WHERE codigo = ?`
-            const valores = [produto, valor, codigo]
+            const sql = `UPDATE produtos SET nome =?, valor=? , quantidade=?, unidade_medida=? WHERE codigo = ?`
+            const valores = [produto, valor, quantidade, unidade, codigo]
 
             conexao.query(sql, valores, function (erro, retorno) {
                 if (erro) {
@@ -270,7 +278,30 @@ app.post('/alterar', function (req, res) {
 
 //Rota para cancelar a edição do produtos
 app.get('/cancelar', function (req, res) {
-    res.redirect('/')
+    res.redirect('/estoquedia')
+})
+
+//Rota get para exibir o formulario
+app.get('/registro-pedido', async (req, res)=> {
+    const sql = 'SELECT * FROM produtos WHERE quantidade > 0'
+    conexao.query(sql, function(erro, retorno){
+        if(erro) throw erro
+        res.render('registro', {produtos: retorno})
+    })
+})
+
+//Rota para  processar o envio do pedido
+app.post('/registro-pedido', function (req, res) {
+
+    const { cliente, endereco, produtos, valor_total, forma_pagamento, pago, observacao } = req.body
+
+
+
+})
+
+//Rota para exibir todos pedidos
+app.get('/pedidos', function (req, res) {
+    res.render('pedidos')
 })
 
 

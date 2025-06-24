@@ -1,22 +1,27 @@
 .background {}
 
 .max-width-custom {
-    max-width: 800px;
-    margin: auto;
+  max-width: 800px;
+  margin: auto;
 
+}
+
+.estoque-width {
+  width: 100%;
+  border-radius: 8px;
 }
 
 .img-edite {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-    
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+
 }
+
 .fade-out {
   transition: opacity 0.5s ease-out;
   opacity: 0;
 }
-
