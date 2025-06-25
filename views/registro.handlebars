@@ -1,6 +1,9 @@
 <main>
-    <div class="container mt-3">
-        <form action="/registro-pedido" method="POST" class="max-width-custom bg-light p-3 rounded-2" id="form-venda">
+    <div class="container mt-4">
+        <div class="bg-white border rounded-3 shadow-sm p-4" style="max-width: 900px; margin: auto;">
+            <h4 class="mb-4 text-dark fw-semibold border-bottom pb-2">
+                <i class="bi bi-journal-text me-2"></i>Registro de Pedido
+            </h4>
 
             {{#if success_msg}}
             <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
@@ -10,72 +13,108 @@
             <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
             {{/if}}
 
-            <div class="mb-3">
-                <label for="cliente" class="form-label">Nome do Cliente</label>
-                <input type="text" class="form-control" id="cliente" name="cliente" required>
-            </div>
+            <form action="/registro-pedido" method="POST" id="form-venda">
 
-            <div class="mb-3">
-                <label for="endereco" class="form-label">Endereço / Bairro / Ponto de Referência</label>
-                <textarea class="form-control" id="endereco" name="endereco" rows="2" required></textarea>
-            </div>
-
-            <label>Produto:</label>
-            <select id="produto-select" class="form-select mb-3">
-                <option value="">Selecione o produto</option>
-                {{#each produtos}}
-                <option value="{{codigo}}" data-quantidade="{{quantidade}}" data-unidade="{{unidade_medida}}">
-                    {{nome}} - Disponível: {{quantidade}} {{unidade_medida}}
-                </option>
-                {{/each}}
-            </select>
-
-            <label>Quantidade:</label>
-            <select id="quantidade-select" class="form-select mb-3">
-                <option value="">Selecione a quantidade</option>
-            </select>
-
-
-            <!-- Valor total -->
-            <div class="mb-3">
-                <label for="valor_total" class="form-label">Valor Total (R$)</label>
-                <input type="number" step="0.01" class="form-control" id="valor_total" name="valor_total" required>
-            </div>
-
-            <!-- Forma de pagamento -->
-            <div class="mb-3">
-                <label for="pagamento" class="form-label">Forma de Pagamento</label>
-                <select class="form-select" id="pagamento" name="forma_pagamento" required>
-                    <option selected disabled>Selecione a forma de pagamento</option>
-                    <option value="Dinheiro">Dinheiro</option>
-                    <option value="Pix">Pix</option>
-                    <option value="Cartão">Cartão</option>
-                    <option value="Não pago">Não pago ainda</option>
-                </select>
-            </div>
-
-            <!-- Está pago? -->
-            <div class="mb-3">
-                <label class="form-label">Pagamento Realizado?</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pago" id="pagoSim" value="Sim" required>
-                    <label class="form-check-label" for="pagoSim">Sim</label>
+                <!-- Cliente -->
+                <div class="mb-3">
+                    <label for="cliente" class="form-label">
+                        <i class="bi bi-person-fill me-1"></i>Nome do Cliente
+                    </label>
+                    <input type="text" class="form-control" id="cliente" name="cliente" required>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pago" id="pagoNao" value="Não" required>
-                    <label class="form-check-label" for="pagoNao">Não</label>
+
+                <!-- Endereço -->
+                <div class="mb-3">
+                    <label for="endereco" class="form-label">
+                        <i class="bi bi-geo-alt-fill me-1"></i>Endereço / Bairro / Ponto de Referência
+                    </label>
+                    <textarea class="form-control" id="endereco" name="endereco" rows="2" required></textarea>
                 </div>
-            </div>
 
-            <!-- Observações -->
-            <div class="mb-3">
-                <label for="observacao" class="form-label">Observações</label>
-                <textarea class="form-control" id="observacao" name="observacao" rows="2"></textarea>
-            </div>
+                <!-- Produto + Quantidade -->
+                <div class="bg-light border p-3 rounded mb-4">
+                    <h6 class="fw-semibold text-secondary mb-3">
+                        <i class="bi bi-cart-plus me-1"></i>Produto e Quantidade
+                    </h6>
 
-            <!-- Botão imprimir e salvar -->
-            <button type="submit" class="btn btn-primary">Salvar</button>
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="produto-select" class="form-label">Produto:</label>
+                            <select id="produto-select" class="form-select">
+                                <option value="">Selecione o produto</option>
+                                {{#each produtos}}
+                                <option value="{{codigo}}" data-quantidade="{{quantidade}}"
+                                    data-unidade="{{unidade_medida}}">
+                                    {{nome}} - {{quantidade}} {{unidade_medida}} disponíveis
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="quantidade-select" class="form-label">Quantidade:</label>
+                            <select id="quantidade-select" class="form-select">
+                                <option value="">Selecione</option>
+                            </select>
+                        </div>
+                    </div>
 
-        </form>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-outline-primary btn-sm" id="adicionar-produto">
+                            <i class="bi bi-plus-lg me-1"></i>Adicionar Produto
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Valor total -->
+                <div class="mb-3">
+                    <label for="valor_total" class="form-label">
+                        <i class="bi bi-cash-stack me-1"></i>Valor Total (R$)
+                    </label>
+                    <input type="number" step="0.01" class="form-control" id="valor_total" name="valor_total" required>
+                </div>
+
+                <!-- Forma de pagamento -->
+                <div class="mb-3">
+                    <label for="pagamento" class="form-label">
+                        <i class="bi bi-credit-card-2-front-fill me-1"></i>Forma de Pagamento
+                    </label>
+                    <select class="form-select" id="pagamento" name="forma_pagamento" required>
+                        <option selected disabled>Selecione</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="Pix">Pix</option>
+                        <option value="Cartão">Cartão</option>
+                        <option value="Não pago">Não pago ainda</option>
+                    </select>
+                </div>
+
+                <!-- Pagamento realizado -->
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bi bi-check-circle-fill me-1"></i>Pagamento Realizado?
+                    </label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pago" id="pagoSim" value="Sim" required>
+                        <label class="form-check-label" for="pagoSim">Sim</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pago" id="pagoNao" value="Não" required>
+                        <label class="form-check-label" for="pagoNao">Não</label>
+                    </div>
+                </div>
+
+                <!-- Observação -->
+                <div class="mb-4">
+                    <label for="observacao" class="form-label">
+                        <i class="bi bi-pencil-square me-1"></i>Observações
+                    </label>
+                    <textarea class="form-control" id="observacao" name="observacao" rows="2"></textarea>
+                </div>
+
+                <!-- Botão salvar -->
+                <button type="submit" class="btn btn-success w-100 fw-bold">
+                    <i class="bi bi-save2 me-1"></i>Salvar Pedido
+                </button>
+            </form>
+        </div>
     </div>
 </main>

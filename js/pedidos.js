@@ -37,7 +37,7 @@ produtoSelect.addEventListener('change', function () {
 
 
             if (unidade === 'kg') {
-                valorFormatado = i.toFixed(3)
+                valorFormatado = i.toFixed(2)
                 texto = `${valorFormatado} Kg`
             } else if (unidade === 'g') {
                 valorFormatado = i.toFixed(0)

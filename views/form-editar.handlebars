@@ -1,29 +1,48 @@
 <main>
-    <div class="container mt-3">
+    <div class="container mt-4" style="max-width: 900px; margin:auto;">
 
-        <div class=" img-edite mb-3 ">
-            <img src="/imagem/{{produtos.imagem}}" alt="Imagem do produto" class="img-fluid img"
-                style="max-height: 100%;">
+        <div class="mb-4 text-center">
+            <img src="/imagem/{{produtos.imagem}}" alt="Imagem do produto" class="img-fluid rounded"
+                style="max-height: 180px; object-fit: cover;">
         </div>
-        <form action="/alterar" method="POST" enctype="multipart/form-data"
-            class="max-width-custom bg-light p-3 rounded-2">
+
+        <form action="/alterar" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded-3 shadow-sm">
             <input type="hidden" name="nomeImagem" value="{{produtos.imagem}}">
+            <input type="hidden" name="codigo" value="{{produtos.codigo}}">
+
+            <h4 class="mb-4 fw-semibold border-bottom pb-2 text-primary">
+                <i class="bi bi-pencil-square me-2"></i>Editar Produto
+            </h4>
+
             <div class="mb-3">
-                <label for="produto" class="form-label">Produto</label>
-                <input type="text" class="form-control" id="produto" name="produto" value="{{produtos.nome}}">
+                <label for="produto" class="form-label">
+                    <i class="bi bi-tag-fill me-1"></i>Produto
+                </label>
+                <input type="text" class="form-control" id="produto" name="produto" value="{{produtos.nome}}" required>
             </div>
 
             <div class="mb-3">
-                <label for="preco" class="form-label">Valor</label>
-                <input type="number" step="0.01"class="form-control" id="preco" name="valor" value="{{produtos.valor}}">
+                <label for="preco" class="form-label">
+                    <i class="bi bi-currency-dollar me-1"></i>Valor
+                </label>
+                <input type="number" step="0.01" class="form-control" id="preco" name="valor" value="{{produtos.valor}}"
+                    required>
             </div>
+
             <div class="mb-3">
-                <label for="quantidade" class="form-label" >Quantidade</label>
-                <input type="number" step="0.01" class="form-control" id="quantidade" name="quantidade" value="{{produtos.quantidade}}">
+                <label for="quantidade" class="form-label">
+                    <i class="bi bi-stack me-1"></i>Quantidade
+                </label>
+                <input type="number" step="0.01" class="form-control" id="quantidade" name="quantidade"
+                    value="{{produtos.quantidade}}" required>
             </div>
+
             <div class="mb-3">
-                <select class="form-select" aria-label="Default select example" name="unidade">
-                    <option selected  > {{produtos.unidade_medida}}</option>
+                <label for="unidade" class="form-label">
+                    <i class="bi bi-rulers me-1"></i>Unidade de Medida
+                </label>
+                <select class="form-select" id="unidade" name="unidade" required>
+                    <option value="{{produtos.unidade_medida}}" selected>{{produtos.unidade_medida}}</option>
                     <option value="kg">Kilo</option>
                     <option value="g">Gramas</option>
                     <option value="un">Unidade</option>
@@ -31,16 +50,21 @@
                 </select>
             </div>
 
-            <div class="mb-3">
-                <input class="form-control" type="file" name="imagem">
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="bi bi-image me-1"></i>Alterar Imagem
+                </label>
+                <input class="form-control" type="file" name="imagem" accept="image/*">
             </div>
 
-            <input type="hidden" name="codigo" value="{{produtos.codigo}}">
-
-
-            {{!-- Botao submite apenas ira enviar o post com dados atualizados --}}
-            <button type="submit" class="btn btn-primary me-2">Alterar</button>
-            <a href="/cancelar" class="btn btn-secondary">Cancelar</a>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1 fw-semibold">
+                    <i class="bi bi-check-lg me-1"></i>Alterar
+                </button>
+                <a href="/cancelar" class="btn btn-secondary flex-grow-1 fw-semibold">
+                    <i class="bi bi-x-lg me-1"></i>Cancelar
+                </a>
+            </div>
         </form>
     </div>
 </main>
