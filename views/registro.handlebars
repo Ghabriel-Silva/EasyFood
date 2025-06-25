@@ -37,27 +37,29 @@
                         <i class="bi bi-cart-plus me-1"></i>Produto e Quantidade
                     </h6>
 
-                    <div class="row">
-                        <div class="col-md-8 mb-3">
-                            <label for="produto-select" class="form-label">Produto:</label>
-                            <select id="produto-select" class="form-select">
-                                <option value="">Selecione o produto</option>
-                                {{#each produtos}}
-                                <option value="{{codigo}}" data-quantidade="{{quantidade}}"
-                                    data-unidade="{{unidade_medida}}">
-                                    {{nome}} - {{quantidade}} {{unidade_medida}} disponíveis
-                                </option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="quantidade-select" class="form-label">Quantidade:</label>
-                            <select id="quantidade-select" class="form-select">
-                                <option value="">Selecione</option>
-                            </select>
+                    <div class="row" id="container">
+                        <div class="row grupo-produto">
+                            <div class="col-md-8 mb-3">
+                                <label for="produto-select" class="form-label">Produto:</label>
+                                <select id="produto-select" class="form-select produto-select" name="produto[]" required>
+                                    <option value="">Selecione o produto</option>
+                                    {{#each produtos}}
+                                    <option value="{{codigo}}" data-quantidade="{{quantidade}}"
+                                        data-unidade="{{unidade_medida}}">
+                                        {{nome}} - {{quantidade}} {{unidade_medida}} disponíveis
+                                    </option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="quantidade-select" class="form-label">Quantidade:</label>
+                                <select id="quantidade-select" class="form-select quantidade-select"
+                                    name="quantidade[]" required>
+                                    <option value="">Selecione</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-
                     <div class="text-end">
                         <button type="button" class="btn btn-outline-primary btn-sm" id="adicionar-produto">
                             <i class="bi bi-plus-lg me-1"></i>Adicionar Produto
@@ -111,7 +113,7 @@
                 </div>
 
                 <!-- Botão salvar -->
-                <button type="submit" class="btn btn-success w-100 fw-bold">
+                <button type="submit"  class="btn btn-success w-100 fw-bold">
                     <i class="bi bi-save2 me-1"></i>Salvar Pedido
                 </button>
             </form>

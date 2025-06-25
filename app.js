@@ -294,7 +294,14 @@ app.get('/registro-pedido', async (req, res)=> {
 app.post('/registro-pedido', function (req, res) {
 
     const { cliente, endereco, produtos, valor_total, forma_pagamento, pago, observacao } = req.body
-
+    console.log(cliente)
+    console.log(endereco)
+    console.log(produtos)
+    console.log(valor_total)
+    console.log(forma_pagamento)
+    console.log(pago)
+    console.log(observacao)
+ 
 
 
 })
