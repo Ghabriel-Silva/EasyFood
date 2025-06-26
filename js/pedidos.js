@@ -2,7 +2,11 @@ const container = document.getElementById('container')
 const botaoAdicionar = document.getElementById('adicionar-produto');
 const grupoOriginal = container.querySelector('.grupo-produto');
 const valor = document.getElementById('valor_total')
- const entrega = document.querySelector('.entrega')
+const entrega = document.querySelector('.entrega')
+
+
+
+
 
 
 //fucntion verifica se o ultimo grupo esta preenchido 
@@ -40,7 +44,7 @@ function calcularValorTotal() {
         }
         const totalComFrete = calculaFrete(total)
         valor.value = totalComFrete.toFixed(2)
-        
+
     })
 
 }
@@ -48,12 +52,12 @@ function calcularValorTotal() {
 function calculaFrete(valor) {
     const entregaSelecionada = document.querySelector('input[name="entrega"]:checked'); //Seleciona o input do tipo radio com o name="entrega" que está marcado no momento.
 
-     if (entregaSelecionada && entregaSelecionada.value === "Sim") {
+    if (entregaSelecionada && entregaSelecionada.value === "Sim") {
         valor += 6;
     }
 
     return valor;
-    
+
 }
 
 container.addEventListener('change', verificaUltimoGrupoPreenchido, calcularValorTotal) //Vai verificar se tenho mudança 
@@ -64,6 +68,19 @@ botaoAdicionar.addEventListener('click', function () {
     const clone = grupoOriginal.cloneNode(true)
     const produtoSelect = clone.querySelector('.produto-select')
     const quantidadeSelect = clone.querySelector('.quantidade-select')
+    const buttonDelete = document.createElement('button')
+    buttonDelete.innerText = 'Deletar'
+    buttonDelete.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'mx-3' ,'mb-3')
+    buttonDelete.style.display = 'inline-block'
+    buttonDelete.style.width = 'auto'
+
+    buttonDelete.addEventListener('click', function () {
+        clone.remove()
+        buttonDelete.remove()
+        botaoAdicionar.disabled = false
+
+    })
+
 
     //limpa valores 
     produtoSelect.value = ''
@@ -81,9 +98,11 @@ botaoAdicionar.addEventListener('click', function () {
         }
     })
     container.appendChild(clone)
+    clone.appendChild(buttonDelete)
     botaoAdicionar.disabled = true   // desabilita até o novo grupo ser preenchido
 
-    
+
+
 })
 
 
@@ -149,7 +168,7 @@ container.addEventListener('change', (e) => {
 })
 
 const radiosEntregas = document.querySelectorAll('input[name="entrega"] ')
-radiosEntregas.forEach(radio=>{
+radiosEntregas.forEach(radio => {
     radio.addEventListener('change', calcularValorTotal)
 })
 

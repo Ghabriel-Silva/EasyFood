@@ -30,20 +30,22 @@
                     </label>
                     <textarea class="form-control" id="endereco" name="endereco" rows="2" required></textarea>
                 </div>
-                
+
                 {{!-- Entrega --}}
                 <div class="mb-3">
                     <label class="form-label">
                         <i class="bi bi-truck"></i> Entrega
                     </label>
                     <div class="form-check">
-                        <input class="form-check-input entrega" type="radio" name="entrega" id="radio-sim" value="Sim" required >
+                        <input class="form-check-input entrega" type="radio" name="entrega" id="radio-sim" value="Sim"
+                            required>
                         <label class="form-check-label" for="radio-sim">
                             Sim
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input entrega" type="radio" name="entrega" id="radio-nao" value="Não" required>
+                        <input class="form-check-input entrega" type="radio" name="entrega" id="radio-nao" value="Não"
+                            required>
                         <label class="form-check-label" for="radio-nao">
                             Não
                         </label>
@@ -65,12 +67,13 @@
                                     {{#each produtos}}
                                     <option value="{{codigo}}" data-quantidade="{{quantidade}}" data-valor="{{valor}}"
                                         data-unidade="{{unidade_medida}}">
-                                        {{nome}} - {{quantidade}} {{unidade_medida}} disponíveis - {{valor}} R$ Kg
+                                        {{nome}} - {{quantidade}} {{unidade_medida}} disponíveis - {{valor}} R$
+                                        {{unidade_medida}}
                                     </option>
                                     {{/each}}
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-4 mb-3 ">
                                 <label for="quantidade-select" class="form-label">Quantidade:</label>
                                 <select class="form-select quantidade-select" name="quantidade[]" required>
                                     <option value="">Selecione</option>
@@ -78,10 +81,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-end">
-                        <button type="button" class="btn btn-outline-primary btn-sm" id="adicionar-produto">
-                            <i class="bi bi-plus-lg me-1"></i>Adicionar Produto
+                    <div class="d-flex flex-wrap justify-content-end gap-3 px-4">
+                        <button type="button" class="btn btn-outline-primary btn-sm text-wrap" id="adicionar-produto">
+                            <i class="bi bi-plus-lg me-1"></i>Add Produto
                         </button>
+
                     </div>
                 </div>
 
