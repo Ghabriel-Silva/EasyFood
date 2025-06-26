@@ -1,6 +1,9 @@
 const container = document.getElementById('container')
 const botaoAdicionar = document.getElementById('adicionar-produto');
 const grupoOriginal = container.querySelector('.grupo-produto');
+const valor = document.getElementById('valor_total')
+ const entrega = document.querySelector('.entrega')
+
 
 //fucntion verifica se o ultimo grupo esta preenchido 
 function verificaUltimoGrupoPreenchido() {
@@ -18,7 +21,43 @@ function verificaUltimoGrupoPreenchido() {
 }
 verificaUltimoGrupoPreenchido()
 // Verifica sempre que há mudança
-container.addEventListener('change', verificaUltimoGrupoPreenchido) //Vai verificar se tenho mudança 
+
+function calcularValorTotal() {
+    const grupos = container.querySelectorAll('.grupo-produto')
+    let total = 0
+
+    grupos.forEach(grupo => {
+        const selectProduto = grupo.querySelector('.produto-select')
+        const selectQuantidade = grupo.querySelector('.quantidade-select')
+
+        const optionSelecionada = selectProduto.options[selectProduto.selectedIndex]
+        const preco = parseFloat(optionSelecionada?.dataset.valor) //pega o preço do produto..... ?pega o valor apenas se a opção existir
+        const quantidade = parseFloat(selectQuantidade.value) // pega a quantidade selecionad
+
+
+        if (!isNaN(preco) && !isNaN(quantidade)) {
+            total += preco * quantidade
+        }
+        const totalComFrete = calculaFrete(total)
+        valor.value = totalComFrete.toFixed(2)
+        
+    })
+
+}
+//calcula frete
+function calculaFrete(valor) {
+    const entregaSelecionada = document.querySelector('input[name="entrega"]:checked'); //Seleciona o input do tipo radio com o name="entrega" que está marcado no momento.
+
+     if (entregaSelecionada && entregaSelecionada.value === "Sim") {
+        valor += 6;
+    }
+
+    return valor;
+    
+}
+
+container.addEventListener('change', verificaUltimoGrupoPreenchido, calcularValorTotal) //Vai verificar se tenho mudança 
+
 
 
 botaoAdicionar.addEventListener('click', function () {
@@ -44,7 +83,7 @@ botaoAdicionar.addEventListener('click', function () {
     container.appendChild(clone)
     botaoAdicionar.disabled = true   // desabilita até o novo grupo ser preenchido
 
-
+    
 })
 
 
@@ -106,5 +145,11 @@ container.addEventListener('change', (e) => {
         }
 
     }
+    calcularValorTotal()
+})
+
+const radiosEntregas = document.querySelectorAll('input[name="entrega"] ')
+radiosEntregas.forEach(radio=>{
+    radio.addEventListener('change', calcularValorTotal)
 })
 

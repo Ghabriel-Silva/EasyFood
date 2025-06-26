@@ -66,7 +66,7 @@ app.use('/imagem', express.static('./image'))
 
 //importando módulo mysql2 
 const mysql = require('mysql2');
-const { connect } = require('http2');
+
 //Criando conexao
 const conexao = mysql.createConnection({
     host: 'localhost',
@@ -83,7 +83,7 @@ conexao.connect(function (erro) {
 
 //manipulação de dados via rotas
 app.use(express.json()); //para ler JSON
-app.use(express.urlencoded({ extended: false })); // para ler dados de formulários com uma estrutura mais simplifida de dados. Essa estrutura irá interpretar os dados apenas como string ou array
+app.use(express.urlencoded({ extended: true })); // para ler dados de formulários com uma estrutura mais simplifida de dados. Essa estrutura irá interpretar os dados apenas como string ou array
 
 //Definindo rota principal 
 app.get('/', function (req, res) {
@@ -282,27 +282,66 @@ app.get('/cancelar', function (req, res) {
 })
 
 //Rota get para exibir o formulario
-app.get('/registro-pedido', async (req, res)=> {
+app.get('/registro-pedido', async (req, res) => {
     const sql = 'SELECT * FROM produtos WHERE quantidade > 0'
-    conexao.query(sql, function(erro, retorno){
-        if(erro) throw erro
-        res.render('registro', {produtos: retorno})
+    conexao.query(sql, function (erro, retorno) {
+        if (erro) throw erro
+        res.render('registro', { produtos: retorno })
     })
 })
 
+
 //Rota para  processar o envio do pedido
-app.post('/registro-pedido', function (req, res) {
+app.post('/registro-pedido', async function (req, res) {
 
-    const { cliente, endereco, produtos, valor_total, forma_pagamento, pago, observacao } = req.body
-    console.log(cliente)
-    console.log(endereco)
-    console.log(produtos)
-    console.log(valor_total)
-    console.log(forma_pagamento)
-    console.log(pago)
-    console.log(observacao)
- 
+    const { cliente, endereco, produto, quantidade, valor_total, forma_pagamento, pago, observacao } = req.body
 
+    try {
+        //Pego valor atual do banco de dados corespondendo ao codigos enviados
+        const resultados = await new Promise((resolve, reject) => {
+            conexao.query('SELECT * FROM produtos WHERE codigo IN (?)', [produto], function (err, retorno) {
+                if (err) reject(err)
+                else resolve(retorno)
+            })
+        })
+
+        if (resultados.length === 0) {
+            return res.status(404).send('nenhum porduto encontrado!')
+        }
+
+        //Para cada produto pedido
+        for (let i = 0; i < produto.length; i++) {
+            const codigoProduto = produto[i] //Produto me retorna direto o codigo produto = [94, 95, 96]
+            const quantidadePedido = parseFloat(quantidade[i])
+
+            // Encontra o produto no resultado do banco
+            const produtoAtual = resultados.find(p => p.codigo == codigoProduto) //Retorna primeiro objeto dentro do array resultados que tenha p.codigo igual ao valor de codigoProduto.
+
+            if (!produtoAtual) {
+                return res.status(404).send(`Produto com código ${codigoProduto} não encontrado.`);
+            }
+
+            const estoqueAtual = parseFloat(produtoAtual.quantidade)
+            const novaQuantidade = estoqueAtual - quantidadePedido
+
+            if (novaQuantidade < 0) {
+                return res.status(400).send(`Estoque insuficiente para o produto ${codigoProduto}.`)
+            }
+            await new Promise((resolve, reject) => {
+                conexao.query('UPDATE produtos SET quantidade = ? WHERE codigo = ?', [novaQuantidade, codigoProduto], (err) => {
+                    if (err) reject(err)
+                    else resolve()
+                })
+            })
+
+            console.log(`Produto ${codigoProduto} atualizado para ${novaQuantidade}`);
+        }
+        res.render('pedidos')
+        console.log(cliente, endereco, produto, quantidade, valor_total, forma_pagamento, pago, observacao);
+    } catch (erro) {
+        console.error('Erro ao atualizar produtos', erro)
+        res.status(500).send('Erro ao atualizar produtos.')
+    }
 
 })
 
