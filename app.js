@@ -295,6 +295,7 @@ app.get('/registro-pedido', async (req, res) => {
 app.post('/registro-pedido', async function (req, res) {
 
     const { cliente, endereco, produto, quantidade, valor_total, forma_pagamento, pago, observacao } = req.body
+    let pedidos = []
 
     try {
         //Pego valor atual do banco de dados corespondendo ao codigos enviados
@@ -336,8 +337,20 @@ app.post('/registro-pedido', async function (req, res) {
 
             console.log(`Produto ${codigoProduto} atualizado para ${novaQuantidade}`);
         }
-        res.render('pedidos')
-        console.log(cliente, endereco, produto, quantidade, valor_total, forma_pagamento, pago, observacao);
+        const novoPedido = {
+            cliente,
+            endereco,
+            produto,
+            quantidade,
+            valor_total,
+            forma_pagamento,
+            pago,
+            observacao
+        }
+        pedidos.push(novoPedido)
+
+        res.render('pedidos', { pedidos });
+
     } catch (erro) {
         console.error('Erro ao atualizar produtos', erro)
         res.status(500).send('Erro ao atualizar produtos.')

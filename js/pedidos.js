@@ -78,7 +78,6 @@ botaoAdicionar.addEventListener('click', function () {
         clone.remove()
         buttonDelete.remove()
         botaoAdicionar.disabled = false
-
     })
 
 
