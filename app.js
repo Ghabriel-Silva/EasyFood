@@ -294,8 +294,7 @@ app.get('/registro-pedido', async (req, res) => {
 //Rota para  processar o envio do pedido
 app.post('/registro-pedido', async function (req, res) {
 
-    const { cliente, endereco, produto, quantidade, valor_total, forma_pagamento, pago, observacao } = req.body
-    let pedidos = []
+    const { cliente, endereco, entrega, produto, quantidade, valor_total, forma_pagamento, pago, observacao } = req.body
 
     try {
         //Pego valor atual do banco de dados corespondendo ao codigos enviados
@@ -334,22 +333,39 @@ app.post('/registro-pedido', async function (req, res) {
                     else resolve()
                 })
             })
-
-            console.log(`Produto ${codigoProduto} atualizado para ${novaQuantidade}`);
         }
-        const novoPedido = {
-            cliente,
-            endereco,
-            produto,
-            quantidade,
-            valor_total,
-            forma_pagamento,
-            pago,
-            observacao
-        }
-        pedidos.push(novoPedido)
 
-        res.render('pedidos', { pedidos });
+        //Adcionando ao banco de dados pedidos
+        const sql = `INSERT  INTO pedidos(nome_cliente, endereco, valor_total, forma_pagamento, foi_pago, observacao, entrega) 
+        VALUES(?, ?, ?, ?, ?, ?, ?)`
+        const valores = [cliente, endereco, valor_total, forma_pagamento, pago, observacao, entrega]
+
+        conexao.query(sql, valores, function (erro, retorno) {
+            if (erro) console.log('Erro ao adicionar ao banco de dados:', erro)
+            console.log('item adicionados')
+            const pedidoId = retorno.insertId //id do pedido
+        })
+
+        // Buscar o preço unitario do produto no banco 
+        conexao.query('SELECT valor FROM produtos WHERE codigo = ?', [codigoProduto], function (erro, resultado) {
+            if (erro) {
+                console.error('Erro ao buscar preço do produto:', erro);
+                return;
+            }
+            console.log(resultado)
+            })
+
+
+        // const valoresItens = [pedidoId, produtoId, quantidade, precoUnitario];
+        // conexao.query(`INSERT INTO itens_pedido(pedido_id, produto_id, quantidade, preco_unitario VALUES (?,?,?,?)`),
+        //     valoresItens,
+        //     (erro, resultados) => {
+        //         if (erro) console.error('Erro ao inserir item do pedido:', erro);
+        //         else { console.log('Item inserido com sucesso!'); }
+        //     }
+
+
+        res.render('pedidos');
 
     } catch (erro) {
         console.error('Erro ao atualizar produtos', erro)

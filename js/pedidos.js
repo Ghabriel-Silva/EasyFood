@@ -78,7 +78,9 @@ botaoAdicionar.addEventListener('click', function () {
         clone.remove()
         buttonDelete.remove()
         botaoAdicionar.disabled = false
+        calcularValorTotal()
     })
+
 
 
     //limpa valores 
@@ -108,7 +110,7 @@ botaoAdicionar.addEventListener('click', function () {
 container.addEventListener('change', (e) => {
     if (e.target.classList.contains('produto-select')) {
         const selectProduto = e.target
-        const grupo = selectProduto.closest('.grupo-produto') // retorno o ancestral mias proximo com a classe
+        const grupo = selectProduto.closest('.grupo-produto') // retorno o ancestral mas proximo com a classe
         const quantidadeSelect = grupo.querySelector('.quantidade-select')
 
         const selectOption = selectProduto.options[selectProduto.selectedIndex] // é uma lista de todas as <option> dentro do <select>.  ....selectProduto.selectedIndex retorna o índice da opção atualmente selecionada.
