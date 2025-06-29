@@ -2,21 +2,28 @@
     <div class="container mt-4">
         {{#if pedidos.length}}
         {{#each pedidos}}
-        <div class="d-flex flex-wrap justify-content-center gap-4">
-            <p>Cliente: {{cliente}}</p>
-            <p>Endereço: {{endereco}}</p>
-            <p>Produto: {{produto}}</p>
-            <p>Quantidade: {{quantidade}}</p>
-            <p>Valor Total: {{valor_total}}</p>
-            <p>Forma de Pagamento: {{forma_pagamento}}</p>
-            <p>Pago: {{#if pago}}Sim{{else}}Não{{/if}}</p>
-            <p>Observação: {{observacao}}</p>
+        <div class="card p-4 mb-4">
+            <h5>Pedido #{{pedido_id}}</h5>
+            <p><strong>Cliente:</strong> {{nome_cliente}}</p>
+            <p><strong>Endereço:</strong> {{endereco}}</p>
+            <p><strong>Forma de Pagamento:</strong> {{forma_pagamento}}</p>
+            <p><strong>Pago:</strong> {{#if pago}}Sim{{else}}Não{{/if}}</p>
+            <p><strong>Observação:</strong> {{observacao}}</p>
+
+            <hr>
+            <h6>Produtos:</h6>
+            <ul>
+                {{#each itens}}
+                <li>
+                    {{nome_produto}} ({{quantidade}}x) - R${{preco_unitario}}
+                </li>
+                {{/each}}
+            </ul>
+            <p><strong>Total:</strong> R${{valor_total}}</p>
         </div>
         {{/each}}
         {{else}}
-        <div class="alert alert-info text-center">
-            Nenhum pedido recebido ainda.
-        </div>
+        <div class="alert alert-info text-center">Nenhum pedido recebido ainda.</div>
         {{/if}}
     </div>
 </main>

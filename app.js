@@ -360,25 +360,25 @@ app.post('/registro-pedido', async function (req, res) {
             const quantidadePedido = parseFloat(quantidade[i])
 
             const produtoAtual = resultados.find(p => p.codigo == codigoProduto)
-            if(!produtoAtual){
+            if (!produtoAtual) {
                 return res.status(404).send(`Produto com código ${codigoProduto} não encontrado (na etapa de inserção do item).`);
             }
             const precoUnitario = produtoAtual.valor;
 
             const valoresItems = [pedidoId, codigoProduto, quantidadePedido, precoUnitario];
 
-            await new Promise((resolve, reject)=>{
+            await new Promise((resolve, reject) => {
                 conexao.query(
-                    `INSERT INTO itens_pedido(pedido_id, produto_id, quantidade, preco_unitario) VALUES(?,?,?,?)`, 
-                    valoresItems, 
-                    (erro)=>(erro ? reject(erro): resolve())
+                    `INSERT INTO itens_pedido(pedido_id, produto_id, quantidade, preco_unitario) VALUES(?,?,?,?)`,
+                    valoresItems,
+                    (erro) => (erro ? reject(erro) : resolve())
                 )
             })
 
         }
 
+        res.redirect('/pedidos');
 
-        res.render('pedidos');
 
     } catch (erro) {
         console.error('Erro ao atualizar produtos', erro)
@@ -388,8 +388,69 @@ app.post('/registro-pedido', async function (req, res) {
 })
 
 //Rota para exibir todos pedidos
-app.get('/pedidos', function (req, res) {
-    res.render('pedidos')
+app.get('/pedidos', async (req, res) => {
+    try {
+        const resultado = await new Promise((resolve, reject) => {
+            const sql = `
+                SELECT 
+                    p.id AS pedido_id, 
+                    p.nome_cliente, 
+                    p.endereco,
+                    p.valor_total,
+                    p.forma_pagamento,
+                    p.foi_pago,
+                    p.observacao,
+                    p.data_pedido,
+                    p.entrega,
+
+                    ip.quantidade,
+                    pr.nome As nome_produto, 
+                    ip.preco_unitario
+
+                FROM pedidos p
+                JOIN itens_pedido ip ON p.id = ip.pedido_id
+                JOIN produtos pr ON pr.codigo = ip.produto_id
+                ORDER BY p.id DESC
+            `;
+            conexao.query(sql, (err, rows) => {
+                err ? reject(err) : resolve(rows)
+            })
+        })
+
+
+        //Agrupar pedidos
+        const pedidosAgrupados = []
+
+        resultado.forEach(linha => {
+            let pedido = pedidosAgrupados.find(p => p.pedido_id === linha.pedido_id)
+            if (!pedido) {
+                pedido = {
+                    pedido_id: linha.pedido_id,
+                    nome_cliente: linha.nome_cliente,
+                    endereco: linha.endereco,
+                    valor_total: linha.valor_total,
+                    forma_pagamento: linha.forma_pagamento,
+                    foi_pago: linha.foi_pago,
+                    observacao: linha.observacao,
+                    data_pedido: linha.data_pedido,
+                    entrega: linha.entrega,
+                    itens: []
+                }
+                pedidosAgrupados.push(pedido);
+            }
+            pedido.itens.push({
+                nome_produto: linha.nome_produto,
+                quantidade: linha.quantidade,
+                preco_unitario: linha.preco_unitario
+            });
+        })
+        // Envia para o Handlebars
+        res.render('pedidos', { pedidos: pedidosAgrupados });
+    } catch (erro) {
+        console.error('Erro ao buscar pedidos:', erro);
+        res.status(500).send('Erro ao carregar pedidos.');
+    }
+
 })
 
 
