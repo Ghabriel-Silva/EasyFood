@@ -11,6 +11,7 @@
   border-radius: 8px;
 }
 
+
 .img-edite {
   display: flex;
   align-items: center;
@@ -21,7 +22,16 @@
 
 }
 
-.fade-out {
-  transition: opacity 0.5s ease-out;
-  opacity: 0;
+/* Edição dropdown lista de produto */
+  .dropdown-menu .dropdown-item {
+  color: #212529; 
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #f0f0f0; 
+  color: #000;
+}
+
+tbody td{
+  font-size: 14px;
 }

@@ -14,6 +14,7 @@ const app = express()
 app.use(fileupload())
 
 
+
 //Usando o js
 app.use('/js', express.static('./js'))
 
@@ -400,9 +401,8 @@ app.get('/pedidos', async (req, res) => {
                     p.forma_pagamento,
                     p.foi_pago,
                     p.observacao,
-                    p.data_pedido,
+                    DATE_FORMAT(P.data_pedido,'%d/%m/%Y %H:%i' ) AS data_pedido,
                     p.entrega,
-
                     ip.quantidade,
                     pr.nome As nome_produto, 
                     ip.preco_unitario

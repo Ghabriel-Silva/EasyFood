@@ -13,47 +13,55 @@
     {{!-- biblioteca de icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    
+
 
 
     {{!--css--}}
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
-<body  class=" bg-light">
+<body class=" bg-light">
     <!-- Header Global -->
     <nav class="navbar navbar-expand-lg bg-light border-bottom px-3">
-    <a class="navbar-brand text-dark fw-bold" href="/">Assados Marisa</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarConteudo">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+        <a class="navbar-brand text-dark fw-bold" href="/">AdminFood</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarConteudo">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarConteudo">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/">Cadastrar Produtos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/estoquedia">Estoque</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/registro-pedido">Registrar pedidos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/pedidos">Pedidos</a>
-            </li>
-        </ul>
+        <div class="collapse navbar-collapse" id="navbarConteudo">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/">Cadastrar Produtos</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Lista de Produto
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item " href="/estoquedia">Assados Marisa</a></li>
+                        <li><a class="dropdown-item" href="#">Tchê Burger</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/registro-pedido">Registrar pedidos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/pedidos">Pedidos</a>
+                </li>
+            </ul>
 
-        <form class="d-flex me-3"  action="/buscar" method="GET">
-            <input class="form-control me-2" type="search" name="nome" placeholder="Buscar produto...">
-            <button class="btn btn-outline-primary" type="submit">Buscar</button>
-        </form>
-    </div>
-</nav>
+            <form class="d-flex me-3" action="/buscar" method="GET">
+                <input class="form-control me-2" type="search" name="nome" placeholder="Buscar produto...">
+                <button class="btn btn-outline-primary" type="submit">Buscar</button>
+            </form>
+        </div>
+    </nav>
 
 
 
-    <div class="container mt-4" >
+
+    <div class="container mt-4">
         <!-- Aqui serão inseridos os conteúdos das views -->
         {{{body}}}
     </div>
@@ -61,6 +69,7 @@
 </body>
 <script src="/js/flash.js"></script>
 <script src="/js/pedidos.js"></script>
+<script src="/js/listaPedidos.js"></script>
 
 
 </html>
