@@ -1,16 +1,16 @@
 <main>
-    <div >
+    <div>
         {{#if pedidos.length}}
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th scope="col">Pedido</th>
-                    <th  scope="col">Cliente</th>
-                    <th  scope="col">Data/Hora</th>
-                    <th  scope="col">Valor total</th>
-                    <th  scope="col">Pagamento</th>
-                    <th  scope="col">Entrega</th>
-                    <th  scope="col">Ações</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Data/Hora</th>
+                    <th scope="col">Valor total</th>
+                    <th scope="col">Pagamento</th>
+                    <th scope="col">Entrega</th>
+                    <th scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -18,17 +18,35 @@
                 <tr>
                     <th scope="row">#{{pedido_id}}</th>
                     <td>{{nome_cliente}} </td>
-                    <td class="date ">{{data_pedido}}</td>
-                    <td>{{valor_total}} </td>
-                    <td>{{forma_pagamento}} </td>
-                    <td>{{entrega}} </td>
+                    <td>{{data_pedido}}</td>
+                    <td>R$ {{valor_total}}</td>
+                    {{#if foi_pago}}
+                    <td>
+                        <div class="status-pagamento">
+                            <span class="pulsar-pago"></span>
+                            <span>Pago</span>
+                        </div>
+                    </td>
+                    {{else}}
+                    <td>
+                        <div class="status-pagamento">
+                            <span class="pulsar-pendente"></span>
+                            <span>Pendente</span>
+                        </div>
+                    </td>
+                    {{/if}}
+                    {{#if entrega }}
+                    <td>Entregar</td>
+                    {{else}}
+                    <td>Retirar</td>
+                    {{/if}}
                     <td>
                         <button type="button" class="btn btn-primary btn-sm"><i class="bi bi-printer"></i></button>
-                        <button type="button" class="btn btn-secondary btn-sm"><i class="bi bi-eye"></i></button>
+                        <button type="button" class="btn btn-secondary btn-sm modal-dialog modal-dialog-scrollable"><i class="bi bi-eye"></i></button>
                         <button type="button" class="btn btn-danger btn-sm"><i class="bi bi-trash3"></i></button>
                     </td>
                 </tr>
-                  {{/each}}
+                {{/each}}
             </tbody>
         </table>
 
