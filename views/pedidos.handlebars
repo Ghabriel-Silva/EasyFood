@@ -54,8 +54,32 @@
                             data-data_pedido="{{data_pedido}}" data-entrega="{{entrega}}" data-itens='{{{json itens}}}'>
                             <i class="bi bi-eye"></i>
                         </button>
-                        <button type="button" class="btn btn-danger btn-sm " v><i class="bi bi-trash3"></i></button>
 
+                        {{!-- Modal deletar --}}
+                        <button type="button" class="btn btn-danger btn-sm btn-delete" data-bs-toggle="modal"
+                            data-bs-target="#modalDelete" data-pedido_id="{{pedido_id}}"><i
+                                class="bi bi-trash3"></i></button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="modal-delete"></h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Tem certeza que deseja excluir este pedido?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Não</button>
+                                        <a type="button" class="btn btn-primary" href="/deletar-pedido" >Sim</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Modal -->
                         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"

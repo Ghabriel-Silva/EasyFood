@@ -55,17 +55,19 @@ document.querySelectorAll('.btn-ver').forEach(btn => {
         itens.forEach(item => {
             container.innerHTML += `
         <div class="col-12 col-md-6">
-          <div class="border rounded p-2 shadow-sm bg-light">
+        <div class="border rounded p-2 shadow-sm bg-light">
             <p class="mb-1"><strong>Produto:</strong> ${item.nome_produto}</p>
             <p class="mb-1"><strong>Quantidade:</strong> ${item.quantidade}</p>
             <p class="mb-0"><strong>Preço Unitário:</strong> R$ ${item.preco_unitario}</p>
-          </div>
+        </div>
         </div>
         `
         })
-
-
-
-
     });
 });
+document.querySelectorAll('.btn-delete').forEach(btn=>{
+    btn.addEventListener('click', function(){
+        document.getElementById('modal-delete').textContent = `Deletar Pedido #${this.dataset.pedido_id}`;
+
+    } )
+})

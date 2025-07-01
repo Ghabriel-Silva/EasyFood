@@ -159,28 +159,22 @@ app.post('/cadastrar', function (req, res) {
 })
 
 //Rota para remover produtos
-app.get('/remover/:codigo/:imagem', function (req, res) {
-    const sql = `DELETE FROM produtos WHERE codigo = ?`
-    const codigo = req.params.codigo //mando o codigo depois em um array separando o comando do valor 
 
-    const caminhoImagem = path.join(__dirname, 'image', req.params.imagem); //📦 path é um módulo nativo do Node.js que serve para trabalhar com caminhos de arquivos e pastas de forma segura e compatível com qualquer sistema operacional (Windows, Linux, Mac).
-    conexao.query(sql, [codigo], function (erro, retorno) {
-        if (erro) throw erro
+app.get('/remover/:codigo', function (req, res) {
+    const codigo = req.params.codigo;
 
-        //O Fs.unlink faz a remoção de um arquivo pode ser de texto, imagem, pdf, pasta. Eu passo 2 informações o local que esta o arquivo e uma função callBack que é obrigatoria que ira tratar de error
-        fs.unlink(caminhoImagem, (erro) => {
-            if (erro) {
-                console.log('Falha ao remover a imagem:', erro);
-            } else {
-                console.log('Imagem removida com sucesso!');
-            }
-        })
-    })
+    // Primeiro remove do banco
+    conexao.query(`UPDATE produtos set ativo = FALSE  WHERE codigo = ?`, [codigo], function (erro, resultado) {
+        if (erro) {
+            console.log('Erro ao remover do banco:', erro);
+            req.flash('error_msg', 'Erro ao inativar produto do banco');
+            return res.redirect('/estoquedia');
+        }
 
-    req.flash('success_msg', 'Produto removido!')
-    //Redirecionar
-    res.redirect('/estoquedia')
-})
+            req.flash('success_msg', 'Produto inativado com sucesso!');
+            return res.redirect('/estoquedia');
+    });
+});
 
 
 
