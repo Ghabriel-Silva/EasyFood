@@ -1,16 +1,11 @@
-.background {}
-
 .max-width-custom {
   max-width: 800px;
   margin: auto;
-
 }
-
 .estoque-width {
   width: 100%;
   border-radius: 8px;
 }
-
 
 .img-edite {
   display: flex;
@@ -82,3 +77,13 @@ tbody td {
   border-radius: 50%;
   position: relative;
 }
+
+.status-retirar{
+  color: #007bff;
+}
+.status-entregar{
+  color: #28a745;
+}
+
+
+

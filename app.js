@@ -22,7 +22,14 @@ app.use('/js', express.static('./js'))
 //importando o Handlebars
 const { engine } = require('express-handlebars')
 //Configuração do express handlebars
-app.engine('handlebars', engine());
+
+app.engine('handlebars', engine({
+    helpers: {  //Isso cria um helper chamado json, que transforma qualquer objeto ou array em string JSON para ser usado no HTML.
+        json: function (context) {
+            return JSON.stringify(context);
+        }
+    }
+}));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
