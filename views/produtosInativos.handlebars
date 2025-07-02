@@ -1,0 +1,33 @@
+<main>
+    <div class="container pt-3">
+        <div class="d-flex flex-wrap justify-content-center gap-4">
+            {{#each produtos}}
+            <div class="card shadow-sm border-0" style="width: 18rem; border-radius: 16px; background-color: #f8f9fa;">
+                <img src="/imagem/{{imagem}}" class="card-img-top rounded-top" alt="{{nome}}"
+                    style="height: 180px; object-fit: cover;">
+
+                <div class="card-body">
+                    <h5 class="card-title text-primary fw-bold text-center">{{nome}}</h5>
+
+                    <p class="mb-1 text-center">
+                        <strong>Valor:</strong> {{valor}} R$
+                    </p>
+                    <p class="mb-3 text-center">
+                        <strong>Estoque:</strong> {{quantidade}} {{unidade_medida}}
+                    </p>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="/editar/{{codigo}}/{{imagem}}" class="btn btn-outline-warning w-100 me-2">Editar</a>
+
+                        <!-- Botão que abre o modal -->
+                        <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal"
+                            data-bs-target="#modal-remover-{{codigo}}">
+                            Remover
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+            
+        </div>
+</main>

@@ -100,7 +100,7 @@ app.get('/', function (req, res) {
 
 //Rota de estoque onde recebo os cadastros
 app.get('/estoquedia', function (req, res) {
-    const sql = 'SELECT * FROM produtos'
+    const sql = 'SELECT * FROM produtos WHERE ativo = TRUE'
 
     conexao.query(sql, function (erro, retorno) {
         if (erro) {
@@ -171,14 +171,10 @@ app.get('/remover/:codigo', function (req, res) {
             return res.redirect('/estoquedia');
         }
 
-            req.flash('success_msg', 'Produto inativado com sucesso!');
+            req.flash('success_msg', 'Produto removido com sucesso!');
             return res.redirect('/estoquedia');
     });
 });
-
-
-
-
 
 //Rota para ir  editar produto
 app.get('/editar/:codigo/:imagem', function (req, res) {
@@ -192,6 +188,14 @@ app.get('/editar/:codigo/:imagem', function (req, res) {
     })
 
 })
+//Rota de pedidos inativos
+app.get('/produtos-inativos', async function(req, res){
+    const sql = 'SELECT * FROM produtos WHERE ativo = FALSE'
+    conexao.query(sql, function(err, retorno){
+        if(err) throw err 
+            res.render('produtosInativos', {produtos: retorno})
+    })
+} )
 
 // Rota para alteração de produtos
 app.post('/alterar', function (req, res) {
