@@ -65,9 +65,14 @@ document.querySelectorAll('.btn-ver').forEach(btn => {
         })
     });
 });
+
+//Pego o add de cada pedido e manipulo ele tanto para mostrar quanto para enviar para rota e no backend executar 
 document.querySelectorAll('.btn-delete').forEach(btn=>{
     btn.addEventListener('click', function(){
-        document.getElementById('modal-delete').textContent = `Deletar Pedido #${this.dataset.pedido_id}`;
-
+        const pedido_id = this.dataset.pedido_id
+        document.getElementById('modal-delete').textContent = `Excluir pedido  #${pedido_id}`;
+        document.getElementById('btn-confirm-delete').href = `/deletar-pedido/${pedido_id}`
     } )
 })
+
+

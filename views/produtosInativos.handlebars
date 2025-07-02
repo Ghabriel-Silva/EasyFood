@@ -1,5 +1,13 @@
 <main>
     <div class="container pt-3">
+        {{#if success_msg}}
+        <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
+        {{/if}}
+
+        {{#if error_msg}}
+        <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
+        {{/if}}
+        {{#if produtos.length}}
         <div class="d-flex flex-wrap justify-content-center gap-4">
             {{#each produtos}}
             <div class="card shadow-sm border-0" style="width: 18rem; border-radius: 16px; background-color: #f8f9fa;">
@@ -17,17 +25,39 @@
                     </p>
 
                     <div class="d-flex justify-content-between">
-                        <a href="/editar/{{codigo}}/{{imagem}}" class="btn btn-outline-warning w-100 me-2">Editar</a>
-
                         <!-- Botão que abre o modal -->
-                        <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                             data-bs-target="#modal-remover-{{codigo}}">
-                            Remover
+                            Reativar
                         </button>
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="modal-remover-{{codigo}}" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="modalLabel-{{codigo}}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content rounded-3 shadow">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel-{{codigo}}">Reativar</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            Deseja Reativar Produto <strong>{{nome}}</strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <a href="/reativar-produto/{{codigo}}" class="btn btn-success">Sim</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {{/each}}
-            
+            {{else}}
+            <div class="alert alert-info text-center" role="alert">
+                Nenhum produto em estoque.<br />
+            </div>
+            {{/if}}
+
         </div>
 </main>

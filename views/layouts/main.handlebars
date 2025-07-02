@@ -14,9 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
+{{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> --}}
 
     {{!--css--}}
     <link rel="stylesheet" href="/css/styles.css">
@@ -42,7 +40,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item " href="/estoquedia">Assados Marisa</a></li>
-                        <li><a class="dropdown-item" href="#">Tchê Burger</a></li>
+                       
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -51,8 +49,15 @@
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="/pedidos">Pedidos</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/produtos-inativos">Produtos Inativos</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Registros Inativos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item " href="/produtos-inativos">Produtos Inativos</a></li>
+                        <li><a class="dropdown-item" href="/pedidos-deletados">Pedidos Excluídos</a></li>
+                    </ul>
                 </li>
             </ul>
 
