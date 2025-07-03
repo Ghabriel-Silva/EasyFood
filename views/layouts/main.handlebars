@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NodeJS e MySql</title>
 
-    
+
 
     {{!--Botstrap--}}
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
@@ -32,47 +32,65 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarConteudo">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/">Cadastrar Produtos</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Lista de Produto
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item " href="/estoquedia">Assados Marisa</a></li>
-                       
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/registro-pedido">Registrar pedidos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/pedidos">Pedidos</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Registros Inativos
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item " href="/produtos-inativos">Produtos Inativos</a></li>
-                        <li><a class="dropdown-item" href="/pedidos-deletados">Pedidos Excluídos</a></li>
-                    </ul>
-                </li>
-            </ul>
 
-            <form class="d-flex me-3" action="/buscar" method="GET">
-                <input class="form-control me-2" type="search" name="nome" placeholder="Buscar produto...">
-                <button class="btn btn-outline-primary" type="submit">Buscar</button>
-            </form>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!-- Produtos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-box-seam"></i> Produtos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/"><i class="bi bi-plus-circle"></i> Cadastrar</a></li>
+                        <li><a class="dropdown-item" href="/estoquedia"><i class="bi bi-egg-fried"></i> Assados
+                                Marisa</a></li>
+                    </ul>
+                </li>
+
+                <!-- Pedidos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-receipt"></i> Pedidos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/registro-pedido"><i class="bi bi-pencil-square"></i>
+                                Registrar Pedido</a></li>
+                        <li><a class="dropdown-item" href="/pedidos"><i class="bi bi-list-check"></i> Pedidos Ativos</a>
+                        </li>
+                        <li><a class="dropdown-item" href="/pedidos-finalizados"><i class="bi bi-check2-circle"></i>
+                                Pedidos Finalizados</a></li>
+                    </ul>
+                </li>
+
+                <!-- Registros Inativos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-archive"></i> Registros Inativos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/produtos-inativos"><i class="bi bi-box"></i> Produtos
+                                Inativos</a></li>
+                        <li><a class="dropdown-item" href="/pedidos-deletados"><i class="bi bi-trash3"></i> Pedidos
+                                Excluídos</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+        <div class="dropdown ms-auto me-3">
+            <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false" style="border: none;">
+                <i class="bi bi-person-circle fs-4"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+               <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i> Sair</a></li> 
+            </ul>
         </div>
     </nav>
 
-
-{{/unless}}
+    {{/unless}}
 
     <div class="container mt-4">
         <!-- Aqui serão inseridos os conteúdos das views -->

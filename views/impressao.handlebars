@@ -1,9 +1,9 @@
-<main style="font-family: monospace; font-size: 14px; width: 58mm; padding: 10px;">
+<main style="font-family: monospace; font-size: 12px; width: auto; padding: 2px;">
     <div class="container">
         {{#each pedidos}}
         <div style="text-align: center;">
             <h2>Assado Marisa</h2>
-            <p>Pedido Nº: {{pedido_id}}</p>
+            <p style="font-size: 16px; "  >Pedido Nº: {{pedido_id}}</p>
         </div>
 
         <hr style="border-top: 1px dashed #000; margin: 10px 0;">
@@ -11,25 +11,34 @@
         <p><strong>Cliente:</strong> {{nome_cliente}}</p>
         <p><strong>Valor Total:</strong> R$ {{valor_total}}</p>
         <p><strong>Forma de Pagamento:</strong> {{forma_pagamento}}</p>
-        <p><strong>Pago:</strong> {{foi_pago}}</p>
-        <p><strong>Obs:</strong> {{observacao}}</p>
+        {{#if foi_pago}}
+        <p><strong>Pago:</strong>Sim</p>
+        {{else}}
+        <p><strong>Pago:</strong>Não</p>
+        {{/if}}
         <p><strong>Data:</strong> {{data_pedido}}</p>
-        <p><strong>Entrega:</strong> {{entrega}}</p>
-        <p><strong>Entrega:</strong> {{endereco}}</p>
+        {{#if entrega}}
+        <p><strong>Entrega:</strong>Sim</p>
+        {{else}}
+        <p><strong>Entrega:</strong>Não</p>
+        {{/if}}
+        <p><strong>Endereço:</strong> {{endereco}}</p>
+        <p><strong>Obs:</strong> {{observacao}}</p>
+
+
 
         <hr style="border-top: 1px dashed #000; margin: 10px 0;">
 
-        <p><strong>Itens:</strong></p>
+        <p><strong>Itens</strong></p>
         <ul style="list-style: none; padding-left: 0;">
             {{#each itens}}
-            <li style="display: flex; justify-content: space-between;">
-                <span>{{quantidade}}x {{nome_produto}}</span>
-                <span>R$ {{preco_unitario}}</span>
+            <li style="display: flex; flex-direction: column;justify-content: space-between;">
+                <span>{{quantidade}} {{unidade_medida}} | {{nome_produto}} </span>
+                <span>R$ {{preco_unitario}} {{unidade_medida}}</span>
+                <hr style="border-top: 1px dashed #000; margin: 10px 0;">
             </li>
             {{/each}}
         </ul>
-
-        <hr style="border-top: 1px dashed #000; margin: 10px 0;">
         <p style="text-align: center;">Obrigado!</p>
         {{/each}}
     </div>
@@ -38,6 +47,6 @@
 <script>
     window.onload = function () {
         window.print();
-        window.onafterprint = ()=> window.close()
+        window.onafterprint = () => window.close()
     };
 </script>

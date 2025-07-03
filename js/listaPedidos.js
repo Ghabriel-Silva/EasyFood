@@ -7,16 +7,22 @@ document.querySelectorAll('.btn-ver').forEach(btn => {
         document.getElementById('modal-pagamento').textContent = this.dataset.forma_pagamento;
         document.getElementById('modal-observacao').textContent = this.dataset.observacao;
         document.getElementById('modal-data').textContent = this.dataset.data_pedido;
-        
-        
+
+        //Pego o id de cada elemento e atribuo em uma variavel e atualizo a rota com o id selecionado
+
+        const btnConcluir = document.getElementById('btn-concluir-pedido')
+        if (btnConcluir) {
+            btnConcluir.href = `/pedido-concluido/${this.dataset.pedido_id}`;
+        }
+
         //Pego o valor queo banco de dados me retorna e manipulo ele 
         const pago = this.dataset.foi_pago;
         const pagoSpan = document.getElementById('modal-pago')
 
-        if(pago === '1'){
+        if (pago === '1') {
             pagoSpan.textContent = 'Sim'
             pagoSpan.className = 'badge bg-success'
-        }else{
+        } else {
             pagoSpan.textContent = 'Pendente'
             pagoSpan.className = 'badge bg-danger'
         }
@@ -26,11 +32,11 @@ document.querySelectorAll('.btn-ver').forEach(btn => {
         const entrega = this.dataset.entrega;
         const entregaSpan = document.getElementById('modal-entrega')
 
-        if(entrega === '1'){
+        if (entrega === '1') {
             entregaSpan.textContent = 'Entregar'
             entregaSpan.className = 'badge text-bg-success'
-            
-        }else{
+
+        } else {
             entregaSpan.textContent = 'Retirar'
             entregaSpan.className = 'badge text-bg-primary'
 
@@ -67,12 +73,12 @@ document.querySelectorAll('.btn-ver').forEach(btn => {
 });
 
 //Pego o add de cada pedido e manipulo ele tanto para mostrar quanto para enviar para rota e no backend executar 
-document.querySelectorAll('.btn-delete').forEach(btn=>{
-    btn.addEventListener('click', function(){
+document.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.addEventListener('click', function () {
         const pedido_id = this.dataset.pedido_id
         document.getElementById('modal-delete').textContent = `Excluir pedido  #${pedido_id}`;
         document.getElementById('btn-confirm-delete').href = `/deletar-pedido/${pedido_id}`
-    } )
+    })
 })
 
 

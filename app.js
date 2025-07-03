@@ -417,6 +417,7 @@ function buscaPedidoPorFiltro(filtroWhereSql) {
                     p.entrega,
                     ip.quantidade,
                     pr.nome As nome_produto, 
+                    pr.unidade_medida,
                     ip.preco_unitario
 
                 FROM pedidos p
@@ -454,7 +455,8 @@ function agruparPedidos(resultado) {
         pedido.itens.push({
             nome_produto: linha.nome_produto,
             quantidade: linha.quantidade,
-            preco_unitario: linha.preco_unitario
+            preco_unitario: linha.preco_unitario,
+            unidade_medida: linha.unidade_medida
         });
     });
 
@@ -464,7 +466,7 @@ function agruparPedidos(resultado) {
 //Rota para exibir todos pedidos
 app.get('/pedidos', async (req, res) => {
     try {
-        const resultado = await buscaPedidoPorFiltro('WHERE p.deletado = FALSE')
+        const resultado = await buscaPedidoPorFiltro('WHERE p.deletado = FALSE AND p.concluido = FALSE')
         const pedidosAgrupados = agruparPedidos(resultado)
         // Envia para o Handlebars
         res.render('pedidos', { pedidos: pedidosAgrupados });
@@ -484,7 +486,7 @@ app.get('/deletar-pedido/:pedido_id', function (req, res) {
             console.log('erro ao atualizar produto', erro)
             return res.status(500).send('Erro ao deletar Pedido')
         }
-        req.flash('success_msg', 'Pedido removido com sucesso')
+        req.flash('success_msg',  `Pedido removido #${codigo} com sucesso`)
         res.redirect('/pedidos')
     })
 })
@@ -507,11 +509,10 @@ app.get('/reativar-pedido/:pedido_id', function (req, res) {
     const sql = `UPDATE pedidos SET deletado = FALSE WHERE id = ?`
     conexao.query(sql, [codigo], (err, retorno) => {
         if (err) {
-            req.flash('error_msg', 'Pedido não Reativado!')
             console.error('Pedido não atualizado', err)
             res.status(500).send('Pedido não atualizado')
         }
-        req.flash('success_msg', 'Pedido Reativado!')
+        req.flash('success_msg', `Pedido  #${codigo} Reativado!`)
         res.redirect('/pedidos-deletados')
     })
 })
@@ -530,6 +531,45 @@ app.get("/imprimir-pedido/:pedido_id", async (req, res) => {
     });
 });
 
+//Rota para concluir pedido
+app.get('/pedido-concluido/:pedido_id', async function (req, res) {
+    const id = req.params.pedido_id
+    const sql = `UPDATE pedidos SET concluido = TRUE , foi_pago = TRUE WHERE  id = ?`
+    conexao.query(sql, [id], function(erro, retorno){
+        if(erro){
+            console.error('Pedido não concluido erro:', erro)
+            res.status(500).send('Pedido não concluido! Erro Servidor')
+        }
+        req.flash('success_msg', `Pedido #${id} Concluido!`)
+        res.redirect('/pedidos')
+    })
+})
+
+//Rota para Exibir pedidos finalizados
+app.get('/pedidos-finalizados',async function(req, res){
+    try {
+        const resultado = await buscaPedidoPorFiltro('WHERE p.concluido = TRUE')
+        const pedidosagrupados = agruparPedidos(resultado)
+        res.render('pedidos-finalizados', {pedidos: pedidosagrupados})
+    } catch (erro) {
+        console.error('Erro ao buscar pedidos:', erro);
+        res.status(500).send('Erro ao carregar pedidos.');
+    }
+})
+
+//Rota para Voltar Pedidos
+app.get('/voltar-pedido/:pedido_id', function(req, res){
+    const id = req.params.pedido_id
+    const sql = 'UPDATE pedidos SET concluido = FALSE WHERE id = ?'
+    conexao.query(sql, [id], function(erro, retorno){
+        if(erro){
+            console.error('Erro ao voltar o pedidos', erro)
+            res.status(500).send('erro ao Voltar pedido')
+        }
+        req.flash('success_msg', `Pedido #${id} voltou para pendente.`)
+        res.redirect('/pedidos-finalizados')
+    })
+})
 
 //Iniciando servidor local host
 app.listen(8080, function () {
