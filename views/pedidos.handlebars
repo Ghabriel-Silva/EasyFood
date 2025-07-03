@@ -1,6 +1,6 @@
 <main>
     <div>
-         {{#if success_msg}}
+        {{#if success_msg}}
         <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
         {{/if}}
 
@@ -52,7 +52,9 @@
                     </td>
                     {{/if}}
                     <td>
-                        <a type="button" class="btn btn-primary btn-sm" href="/imprimir-pedido/{{pedido_id}}"><i class="bi bi-printer"></i></a>
+                        <a href="/imprimir-pedido/{{pedido_id}}" target="_blank" class="btn btn-primary btn-sm">
+                            <i class="bi bi-printer"></i>
+                        </a>
                         <button type="button" class="btn btn-secondary btn-sm btn-ver" data-bs-toggle="modal"
                             data-bs-target="#staticBackdrop" data-pedido_id="{{pedido_id}}"
                             data-nome_cliente="{{nome_cliente}}" data-endereco="{{endereco}}"
@@ -82,7 +84,8 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Não</button>
-                                        <a type="button" id="btn-confirm-delete" class="btn btn-primary" href="#" >Sim</a>
+                                        <a type="button" id="btn-confirm-delete" class="btn btn-primary"
+                                            href="#">Sim</a>
                                     </div>
                                 </div>
                             </div>

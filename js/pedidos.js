@@ -52,7 +52,7 @@ function calcularValorTotal() {
 function calculaFrete(valor) {
     const entregaSelecionada = document.querySelector('input[name="entrega"]:checked'); //Seleciona o input do tipo radio com o name="entrega" que está marcado no momento.
 
-    if (entregaSelecionada && entregaSelecionada.value === "Sim") {
+    if (entregaSelecionada && entregaSelecionada.value === "1") {
         valor += 6;
     }
 

@@ -1,0 +1,43 @@
+<main style="font-family: monospace; font-size: 14px; width: 58mm; padding: 10px;">
+    <div class="container">
+        {{#each pedidos}}
+        <div style="text-align: center;">
+            <h2>Assado Marisa</h2>
+            <p>Pedido Nº: {{pedido_id}}</p>
+        </div>
+
+        <hr style="border-top: 1px dashed #000; margin: 10px 0;">
+
+        <p><strong>Cliente:</strong> {{nome_cliente}}</p>
+        <p><strong>Valor Total:</strong> R$ {{valor_total}}</p>
+        <p><strong>Forma de Pagamento:</strong> {{forma_pagamento}}</p>
+        <p><strong>Pago:</strong> {{foi_pago}}</p>
+        <p><strong>Obs:</strong> {{observacao}}</p>
+        <p><strong>Data:</strong> {{data_pedido}}</p>
+        <p><strong>Entrega:</strong> {{entrega}}</p>
+        <p><strong>Entrega:</strong> {{endereco}}</p>
+
+        <hr style="border-top: 1px dashed #000; margin: 10px 0;">
+
+        <p><strong>Itens:</strong></p>
+        <ul style="list-style: none; padding-left: 0;">
+            {{#each itens}}
+            <li style="display: flex; justify-content: space-between;">
+                <span>{{quantidade}}x {{nome_produto}}</span>
+                <span>R$ {{preco_unitario}}</span>
+            </li>
+            {{/each}}
+        </ul>
+
+        <hr style="border-top: 1px dashed #000; margin: 10px 0;">
+        <p style="text-align: center;">Obrigado!</p>
+        {{/each}}
+    </div>
+</main>
+
+<script>
+    window.onload = function () {
+        window.print();
+        window.onafterprint = ()=> window.close()
+    };
+</script>

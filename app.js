@@ -114,10 +114,6 @@ app.get('/estoquedia', function (req, res) {
     })
 })
 
-
-
-
-
 //Rota de cadastro 
 app.post('/cadastrar', function (req, res) {
     //Obter os dados que seram utilizados para cadastro
@@ -498,7 +494,7 @@ app.get('/pedidos-deletados', async function (req, res) {
     try {
         const resultado = await buscaPedidoPorFiltro('WHERE p.deletado = TRUE')
         const pedidosagrupados = agruparPedidos(resultado)
-        res.render('pedidos-deletados', {pedidos:pedidosagrupados})
+        res.render('pedidos-deletados', { pedidos: pedidosagrupados })
     } catch (erro) {
         console.error('Erro ao buscar pedidos:', erro);
         res.status(500).send('Erro ao carregar pedidos.');
@@ -506,11 +502,11 @@ app.get('/pedidos-deletados', async function (req, res) {
 })
 
 //rota reativar pedidos
-app.get('/reativar-pedido/:pedido_id', function(req, res){
+app.get('/reativar-pedido/:pedido_id', function (req, res) {
     const codigo = req.params.pedido_id
     const sql = `UPDATE pedidos SET deletado = FALSE WHERE id = ?`
-    conexao.query(sql, [codigo], (err, retorno)=>{
-        if(err){
+    conexao.query(sql, [codigo], (err, retorno) => {
+        if (err) {
             req.flash('error_msg', 'Pedido não Reativado!')
             console.error('Pedido não atualizado', err)
             res.status(500).send('Pedido não atualizado')
@@ -519,6 +515,20 @@ app.get('/reativar-pedido/:pedido_id', function(req, res){
         res.redirect('/pedidos-deletados')
     })
 })
+
+//rota para imprimir pedido
+app.get("/imprimir-pedido/:pedido_id", async (req, res) => {
+    const pedidoId = req.params.pedido_id;
+
+    const dadosPedido = await buscaPedidoPorFiltro(`WHERE p.id = ${pedidoId}`)
+    const dadosAgrupados = agruparPedidos(dadosPedido)
+
+
+    res.render('impressao', {
+        pedidos: dadosAgrupados,
+        ocultar_header: true
+    });
+});
 
 
 //Iniciando servidor local host
