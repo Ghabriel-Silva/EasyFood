@@ -56,13 +56,11 @@ app.use((req, res, next) => {
 
 
 
-
 //importando o modulo bootstrap para poder usar no projeto
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'))
 
 //importando FilesSytem
 const fs = require('fs')
-
 
 
 //Referenciando a pasta css
@@ -92,12 +90,12 @@ conexao.connect(function (erro) {
 app.use(express.json()); //para ler JSON
 app.use(express.urlencoded({ extended: true })); // para ler dados de formulários com uma estrutura mais simplifida de dados. Essa estrutura irá interpretar os dados apenas como string ou array
 
-//Definindo rota principal  produtos 
+//Definindo rota principal  produtos  ok 
 app.get('/', function (req, res) {
     res.render('form') //Retorno o formulario e vou retornar um json contendo todos produtos
 })
 
-//Rota de estoque onde recebo os cadastros
+//Rota de estoque onde recebo os cadastros ok 
 app.get('/estoquedia', function (req, res) {
     const sql = 'SELECT * FROM produtos WHERE ativo = TRUE'
 
@@ -112,7 +110,7 @@ app.get('/estoquedia', function (req, res) {
     })
 })
 
-//Rota de cadastro 
+//Rota de cadastro  ok 
 app.post('/cadastrar', function (req, res) {
     //Obter os dados que seram utilizados para cadastro
     const { produto, valor, quantidade, unidade } = req.body;
@@ -153,7 +151,7 @@ app.post('/cadastrar', function (req, res) {
 
 })
 
-//Rota para remover produtos
+//Rota para remover produtos ok
 
 app.get('/remover/:codigo', function (req, res) {
     const codigo = req.params.codigo;
@@ -171,7 +169,9 @@ app.get('/remover/:codigo', function (req, res) {
     });
 });
 
-//Rota para ir  editar produto
+
+
+//Rota para ir  editar produto ok 
 app.get('/editar/:codigo/:imagem', function (req, res) {
     let sql = `SELECT * FROM produtos WHERE codigo = ${req.params.codigo}`
 
@@ -183,7 +183,7 @@ app.get('/editar/:codigo/:imagem', function (req, res) {
     })
 
 })
-//Rota de pedidos inativos
+//Rota de produtos  inativos ok 
 app.get('/produtos-inativos', function (req, res) {
     const sql = 'SELECT * FROM produtos WHERE ativo = FALSE'
     conexao.query(sql, function (err, retorno) {
@@ -192,7 +192,7 @@ app.get('/produtos-inativos', function (req, res) {
     })
 })
 
-//Rota para reativar Produtos
+//Rota para reativar Produtos ok
 app.get('/reativar-produto/:codigo', function (req, res) {
     const codigo = req.params.codigo
     const sql = `UPDATE produtos SET ativo = TRUE WHERE codigo = ?`
@@ -203,7 +203,7 @@ app.get('/reativar-produto/:codigo', function (req, res) {
     })
 })
 
-// Rota para alteração de produtos
+// Rota para alteração de produtos ok 
 app.post('/alterar', function (req, res) {
     const { produto, valor, codigo, quantidade, unidade } = req.body;
 
@@ -288,10 +288,14 @@ app.post('/alterar', function (req, res) {
 
 });
 
-//Rota para cancelar a edição do produtos
+//Rota para cancelar a edição do produtos  ok
 app.get('/cancelar', function (req, res) {
     res.redirect('/estoquedia')
 })
+
+
+
+
 
 //Rota get para exibir o formulario
 app.get('/registro-pedido', async (req, res) => {

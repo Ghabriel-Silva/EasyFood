@@ -11,7 +11,7 @@ const conexao = mysql.createConnection({
 //Teste de coneção 
 conexao.connect(function (erro) {
     if (erro) throw erro;
-    console.log('Conexão conecatado com sucesso')
+    console.log('Conecatado com sucesso')
 })
 
-module.exports = conexao
+module.exports = conexao;
