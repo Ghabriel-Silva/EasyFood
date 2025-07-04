@@ -74,8 +74,6 @@ app.use('/imagem', express.static('./image'))
 
 //importando módulo mysql2 
 const mysql = require('mysql2');
-const { error } = require('console');
-
 //Criando conexao
 const conexao = mysql.createConnection({
     host: 'localhost',
@@ -94,7 +92,7 @@ conexao.connect(function (erro) {
 app.use(express.json()); //para ler JSON
 app.use(express.urlencoded({ extended: true })); // para ler dados de formulários com uma estrutura mais simplifida de dados. Essa estrutura irá interpretar os dados apenas como string ou array
 
-//Definindo rota principal 
+//Definindo rota principal  produtos 
 app.get('/', function (req, res) {
     res.render('form') //Retorno o formulario e vou retornar um json contendo todos produtos
 })
@@ -540,7 +538,7 @@ app.get('/pedido-concluido/:pedido_id', async function (req, res) {
             console.error('Pedido não concluido erro:', erro)
             res.status(500).send('Pedido não concluido! Erro Servidor')
         }
-        req.flash('success_msg', `Pedido #${id} Concluido!`)
+        req.flash('success_msg', `Pedido #${id}  Concluido!`)
         res.redirect('/pedidos')
     })
 })
