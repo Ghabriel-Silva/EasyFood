@@ -9,11 +9,16 @@ document.querySelectorAll('.btn-ver').forEach(btn => {
         document.getElementById('modal-data').textContent = this.dataset.data_pedido;
 
         //Pego o id de cada elemento e atribuo em uma variavel e atualizo a rota com o id selecionado
-
         const btnConcluir = document.getElementById('btn-concluir-pedido')
         if (btnConcluir) {
             btnConcluir.href = `/pedido-concluido/${this.dataset.pedido_id}`;
         }
+
+        const btnEditar = document.getElementById('btn-editar-pedido')
+        if(btnEditar){
+            btnEditar.href = `/pedido-editar/${this.dataset.pedido_id}`
+        }
+
 
         //Pego o valor queo banco de dados me retorna e manipulo ele 
         const pago = this.dataset.foi_pago;
@@ -63,7 +68,7 @@ document.querySelectorAll('.btn-ver').forEach(btn => {
         <div class="col-12 col-md-6">
         <div class="border rounded p-2 shadow-sm bg-light">
             <p class="mb-1"><strong>Produto:</strong> ${item.nome_produto}</p>
-            <p class="mb-1"><strong>Quantidade:</strong> ${item.quantidade}</p>
+            <p class="mb-1"><strong>Quantidade:</strong> ${item.quantidade} ${item.unidade_medida} </p>
             <p class="mb-0"><strong>Preço Unitário:</strong> R$ ${item.preco_unitario}</p>
         </div>
         </div>

@@ -15,11 +15,13 @@ const app = express()
 // Handlebars
 app.engine('handlebars', engine({
     helpers: {
-        json: context => JSON.stringify(context)
+        json: context => JSON.stringify(context),
+        eq: (a, b) => a == b
     }
 }))
 app.set('view engine', 'handlebars')
 app.set('views', path.join(__dirname, '../views'))
+
 
 // Middlewares globais
 app.use(express.json())

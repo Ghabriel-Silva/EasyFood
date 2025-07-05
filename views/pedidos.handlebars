@@ -60,7 +60,7 @@
                             data-nome_cliente="{{nome_cliente}}" data-endereco="{{endereco}}"
                             data-valor_total="{{valor_total}}" data-forma_pagamento="{{forma_pagamento}}"
                             data-foi_pago="{{foi_pago}}" data-observacao="{{observacao}}"
-                            data-data_pedido="{{data_pedido}}" data-entrega="{{entrega}}" data-itens='{{{json itens}}}'>
+                            data-data_pedido="{{data_pedido}}" data-entrega="{{entrega}}" data-unidade="{{unidade_medida}}" data-itens='{{{json itens}}}'>
                             <i class="bi bi-eye"></i>
                         </button>
 
@@ -126,7 +126,7 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Fechar</button>
-                                        <button type="button" class="btn btn-warning">Editar</button>
+                                        <a type="button" class="btn btn-warning" id="btn-editar-pedido"  href="#">Editar</a>
                                         <a type="button" class="btn btn-success" id="btn-concluir-pedido" href="#">Concluir</a>
                                     </div>
                                 </div>

@@ -17,6 +17,7 @@ function buscaPedidoPorFiltro(filtroWhereSql) {
                     pr.nome As nome_produto, 
                     pr.unidade_medida,
                     ip.preco_unitario
+                    
 
                 FROM pedidos p
                 JOIN itens_pedido ip ON p.id = ip.pedido_id

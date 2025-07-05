@@ -99,7 +99,9 @@ module.exports = {
 
             }
 
-            res.redirect('/pedidos');
+            res.redirect('/pedidos', {
+                modo: 'criar'
+            });
 
 
         } catch (erro) {
@@ -212,6 +214,27 @@ module.exports = {
             req.flash('success_msg', `Pedido #${id} voltou para pendente.`)
             res.redirect('/pedidos-finalizados')
         })
+    },
+
+    pedidoEditar: async (req, res) => {
+        const id = req.params.pedido_id;
+        try {
+            const resultado = await buscaPedidoPorFiltro(`WHERE p.id = ${id}`);
+            const pedidosAgrupados = agruparPedidos(resultado);
+
+            if (pedidosAgrupados.length === 0) {
+                return res.status(404).send({ erro: "Pedido não encontrado!" });
+            }
+
+            // Retorna o pedido agrupado como JSON
+            res.render('editapedido', {
+                pedido:pedidosAgrupados[0]
+            })
+
+        } catch (erro) {
+            console.error('Erro ao exibir pedido', erro);
+            res.status(500).send({ erro: erro.message || 'Erro interno no servidor' });
+        }
     }
 
 }

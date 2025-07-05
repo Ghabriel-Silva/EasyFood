@@ -2,7 +2,7 @@
     <div class="container mt-4">
         <div class="bg-white border rounded-3 shadow-sm p-4" style="max-width: 900px; margin: auto;">
             <h4 class="mb-4 text-dark fw-semibold border-bottom pb-2">
-                <i class="bi bi-journal-text me-2"></i>Registro de Pedido
+                <i class="bi bi-journal-text me-2"></i>Editar Pedido #{{pedido.pedido_id}}
             </h4>
 
             {{#if success_msg}}
@@ -13,14 +13,14 @@
             <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
             {{/if}}
 
-            <form action="/registro-pedido" method="POST"  id="form-venda">
+            <form action="" method="POST"  id="form-venda">
 
                 <!-- Cliente -->
                 <div class="mb-3">
                     <label for="cliente" class="form-label">
                         <i class="bi bi-person-fill me-1"></i>Nome do Cliente
                     </label>
-                    <input type="text" class="form-control" id="cliente" name="cliente" required>
+                    <input type="text" class="form-control" id="cliente" name="cliente" value="{{pedido.nome_cliente}}" required>
                 </div>
 
                 <!-- Endereço -->
@@ -28,7 +28,7 @@
                     <label for="endereco" class="form-label">
                         <i class="bi bi-geo-alt-fill me-1"></i>Endereço / Bairro / Ponto de Referência
                     </label>
-                    <textarea class="form-control" id="endereco" name="endereco" rows="2" required></textarea>
+                    <input class="form-control" id="endereco" name="endereco" rows="2" value="{{pedido.endereco}}" required></input>
                 </div>
 
                 {{!-- Entrega --}}
