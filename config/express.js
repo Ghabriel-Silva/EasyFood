@@ -1,43 +1,52 @@
-const express = require('express');
-const fileupload = require('express-fileupload');
-const session = require('express-session');
-const flash = require('connect-flash');
-const { engine } = require('express-handlebars');
-const path = require('path');
+// config/express.js
+const express = require('express')
+const session = require('express-session')
+const flash = require('connect-flash')
+const fileupload = require('express-fileupload')
+const path = require('path')
+const { engine } = require('express-handlebars')
 
-const app = express();
+// Rotas
+const produtosRoute = require('../routes/produto')
+const pedidosRoute = require('../routes/pedido')
 
-// Config Handlebars
+const app = express()
+
+// Handlebars
 app.engine('handlebars', engine({
     helpers: {
-        json: (context) => JSON.stringify(context)
+        json: context => JSON.stringify(context)
     }
-}));
-app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, '../views'));
+}))
+app.set('view engine', 'handlebars')
+app.set('views', path.join(__dirname, '../views'))
 
-// Middlewares
-app.use(fileupload());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Middlewares globais
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(fileupload())
+
 app.use(session({
     secret: '@Gs189970',
     resave: false,
     saveUninitialized: true
-}));
-app.use(flash());
+}))
+app.use(flash())
 
-// Flash messages
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    next();
-});
+    res.locals.success_msg = req.flash('success_msg')
+    res.locals.error_msg = req.flash('error_msg')
+    next()
+})
 
-// Arquivos estáticos
-app.use('/js', express.static(path.join(__dirname, '../public/js')));
-app.use('/css', express.static(path.join(__dirname, '../public/css')));
-app.use('/imagem', express.static(path.join(__dirname, '../public/image')));
-app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap/dist')));
+// Pastas públicas
+app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap/dist')))
+app.use('/js', express.static(path.join(__dirname, '../js')))
+app.use('/css', express.static(path.join(__dirname, '../css')))
+app.use('/imagem', express.static(path.join(__dirname, '../image')))
 
-module.exports = app;
+// Rotas
+app.use('/', produtosRoute)
+app.use('/', pedidosRoute)
+
+module.exports = app
