@@ -38,7 +38,8 @@ module.exports = {
 
         const sql = `INSERT INTO produtos (nome, valor, imagem, quantidade, unidade_medida) VALUES (?, ?, ?,?,?)`;
         const valores = [produto, valor, imagem, quantidade, unidade];
-
+        const caminhoImage = path.join(__dirname, '../image', imagem)
+        console.log(caminhoImage)
         //Executar  comando no sql
         conexao.query(sql, valores, function (erro, retorno) {
             //caso ocorra erro 
@@ -46,15 +47,16 @@ module.exports = {
                 req.flash('error_msg', 'Erro no banco de dados!');
                 return res.redirect('/');
             }
-            req.files.imagem.mv(__dirname + '/image/' + imagem, (err) => {
+            req.files.imagem.mv(caminhoImage, (err) => {
                 if (err) {
                     req.flash('error_msg', ' Erro ao salvar imagem.');
+                    console.log('Erro aqui ao enviar', err)
                     return res.redirect('/');
                 }
+                //Retornar para rota principal
+                req.flash('success_msg', ' Produto cadastrado com sucesso!');
+                res.redirect('/')
             });
-            //Retornar para rota principal
-            req.flash('success_msg', ' Produto cadastrado com sucesso!');
-            res.redirect('/')
         })
     },
 
@@ -154,7 +156,7 @@ module.exports = {
                         return res.redirect('/estoquedia')
                     }
                     //se n tiver nenhum erro ai vou remover a imagem atual do diretório
-                    const caminhoImagemAntiga = path.join(__dirname, 'image', produtoAtual.imagem)
+                    const caminhoImagemAntiga = path.join(__dirname, '../image', produtoAtual.imagem)
                     if (fs.existsSync(caminhoImagemAntiga)) {
                         fs.unlink(caminhoImagemAntiga, function (erro) {
                             if (erro) console.log('Erro ao remover imagem antiga:', erro)
@@ -162,7 +164,7 @@ module.exports = {
                     }
 
                     //Salvando nova imagem
-                    novaImagem.mv(path.join(__dirname, 'image', novoNomeImagem), (erro) => {
+                    novaImagem.mv(path.join(__dirname, '../image', novoNomeImagem), (erro) => {
                         if (erro) {
                             console.log('Erro ao salvar imagem', erro)
                             req.flash('error_msg', 'Erro ao salvar a imagem!')

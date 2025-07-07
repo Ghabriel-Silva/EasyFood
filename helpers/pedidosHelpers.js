@@ -14,6 +14,7 @@ function buscaPedidoPorFiltro(filtroWhereSql) {
                     DATE_FORMAT(P.data_pedido,'%d/%m/%Y %H:%i' ) AS data_pedido,
                     p.entrega,
                     ip.quantidade,
+                    ip.produto_id,
                     pr.nome As nome_produto, 
                     pr.unidade_medida,
                     ip.preco_unitario
@@ -52,6 +53,7 @@ function agruparPedidos(resultado) {
             pedidosAgrupados.push(pedido);
         }
         pedido.itens.push({
+            produto_id: linha.produto_id,
             nome_produto: linha.nome_produto,
             quantidade: linha.quantidade,
             preco_unitario: linha.preco_unitario,
@@ -63,6 +65,6 @@ function agruparPedidos(resultado) {
 }
 
 module.exports = {
-    agruparPedidos, 
+    agruparPedidos,
     buscaPedidoPorFiltro
 }

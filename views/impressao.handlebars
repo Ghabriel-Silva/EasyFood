@@ -1,45 +1,43 @@
-<main style="font-family: monospace; font-size: 12px; width: auto; padding: 2px;">
+<main style="font-family: monospace; font-size: 14px; width: auto; padding: 2px; color: black; text-transform: uppercase;">
     <div class="container">
         {{#each pedidos}}
         <div style="text-align: center;">
-            <h2>Assado Marisa</h2>
-            <p style="font-size: 16px; "  >Pedido Nº: {{pedido_id}}</p>
+            <h2 style="color: black;">ASSADO MARISA</h2>
+            <p style="font-size: 16px;">PEDIDO Nº: {{pedido_id}}</p>
         </div>
 
         <hr style="border-top: 1px dashed #000; margin: 10px 0;">
 
-        <p><strong>Cliente:</strong> {{nome_cliente}}</p>
-        <p><strong>Valor Total:</strong> R$ {{valor_total}}</p>
-        <p><strong>Forma de Pagamento:</strong> {{forma_pagamento}}</p>
+        <p><strong>CLIENTE:</strong> {{nome_cliente}}</p>
+        <p><strong>VALOR TOTAL:</strong> R$ {{valor_total}}</p>
+        <p><strong>FORMA DE PAGAMENTO:</strong> {{forma_pagamento}}</p>
         {{#if foi_pago}}
-        <p><strong>Pago:</strong>Sim</p>
+        <p><strong>PAGO:</strong> SIM</p>
         {{else}}
-        <p><strong>Pago:</strong>Não</p>
+        <p><strong>PAGO:</strong> NÃO</p>
         {{/if}}
-        <p><strong>Data:</strong> {{data_pedido}}</p>
+        <p><strong>DATA:</strong> {{data_pedido}}</p>
         {{#if entrega}}
-        <p><strong>Entrega:</strong>Sim</p>
+        <p><strong>ENTREGA:</strong> SIM</p>
         {{else}}
-        <p><strong>Entrega:</strong>Não</p>
+        <p><strong>ENTREGA:</strong> NÃO</p>
         {{/if}}
-        <p><strong>Endereço:</strong> {{endereco}}</p>
-        <p><strong>Obs:</strong> {{observacao}}</p>
-
-
+        <p><strong>ENDEREÇO:</strong> {{endereco}}</p>
+        <p><strong>OBS:</strong> {{observacao}}</p>
 
         <hr style="border-top: 1px dashed #000; margin: 10px 0;">
 
-        <p><strong>Itens</strong></p>
+        <p><strong>ITENS</strong></p>
         <ul style="list-style: none; padding-left: 0;">
             {{#each itens}}
-            <li style="display: flex; flex-direction: column;justify-content: space-between;">
-                <span>{{quantidade}} {{unidade_medida}} | {{nome_produto}} </span>
+            <li style="display: flex; flex-direction: column; justify-content: space-between;">
+                <span>{{quantidade}} {{unidade_medida}} | {{nome_produto}}</span>
                 <span>R$ {{preco_unitario}} {{unidade_medida}}</span>
                 <hr style="border-top: 1px dashed #000; margin: 10px 0;">
             </li>
             {{/each}}
         </ul>
-        <p style="text-align: center;">Obrigado!</p>
+        <p style="text-align: center;">OBRIGADO!</p>
         {{/each}}
     </div>
 </main>

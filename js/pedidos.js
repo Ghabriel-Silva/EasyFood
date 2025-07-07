@@ -5,10 +5,6 @@ const valor = document.getElementById('valor_total')
 const entrega = document.querySelector('.entrega')
 
 
-
-
-
-
 //fucntion verifica se o ultimo grupo esta preenchido 
 function verificaUltimoGrupoPreenchido() {
     const grupos = container.querySelectorAll('.grupo-produto') //Node list uma lista de []
@@ -67,12 +63,17 @@ container.addEventListener('change', verificaUltimoGrupoPreenchido, calcularValo
 botaoAdicionar.addEventListener('click', function () {
     const clone = grupoOriginal.cloneNode(true)
     const produtoSelect = clone.querySelector('.produto-select')
+    const btnDeletarEditar = clone.querySelector('.btn-editar-deletar')
     const quantidadeSelect = clone.querySelector('.quantidade-select')
     const buttonDelete = document.createElement('button')
     buttonDelete.innerText = 'Deletar'
     buttonDelete.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'mx-3' ,'mb-3')
     buttonDelete.style.display = 'inline-block'
     buttonDelete.style.width = 'auto'
+
+    if(btnDeletarEditar){
+        btnDeletarEditar.remove()
+    }
 
     buttonDelete.addEventListener('click', function () {
         clone.remove()
@@ -173,3 +174,14 @@ radiosEntregas.forEach(radio => {
     radio.addEventListener('change', calcularValorTotal)
 })
 
+const butonsRemover = document.querySelectorAll('.btn-editar-deletar')
+const containerPedidos = document.querySelector('.container');
+
+butonsRemover.forEach(botao => {
+    botao.addEventListener('click', function(){
+        const grupo = botao.closest('.grupo-produto')
+        if(grupo){
+            grupo.remove()
+        }
+    })
+});

@@ -99,12 +99,8 @@ module.exports = {
 
             }
 
-            res.redirect('/pedidos', {
-                modo: 'criar'
-            });
-
-
-        } catch (erro) {
+            res.redirect('/pedidos');
+}catch (erro) {
             console.error('Erro ao atualizar produtos', erro)
             res.status(500).send('Erro ao atualizar produtos.')
         }
@@ -218,7 +214,21 @@ module.exports = {
 
     pedidoEditar: async (req, res) => {
         const id = req.params.pedido_id;
+        const sql = 'SELECT * FROM produtos WHERE quantidade > 0 AND ativo = TRUE '
+
+        function buscarProdutos(sql){
+            return new Promise((resolve, reject)=>{
+                conexao.query(sql, function(err, retorno){
+                    if(err){
+                        console.error('Erro ao buscar produtos:', err);
+                        return reject(err)
+                    }
+                    resolve(retorno)
+                })
+            })
+        }
         try {
+            const produtos = await buscarProdutos(sql)
             const resultado = await buscaPedidoPorFiltro(`WHERE p.id = ${id}`);
             const pedidosAgrupados = agruparPedidos(resultado);
 
@@ -227,8 +237,9 @@ module.exports = {
             }
 
             // Retorna o pedido agrupado como JSON
-            res.render('editapedido', {
-                pedido:pedidosAgrupados[0]
+            res.render('editaPedido',{
+                pedido:pedidosAgrupados[0], 
+                produtos:produtos
             })
 
         } catch (erro) {

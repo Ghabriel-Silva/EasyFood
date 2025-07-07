@@ -13,5 +13,4 @@ router.get('/pedido-concluido/:pedido_id', pedidoController.pedidoConcluir)
 router.get('/pedidos-finalizados', pedidoController. pedidosFinalizados)
 router.get('/voltar-pedido/:pedido_id', pedidoController.pedidosVoltar)
 router.get('/pedido-editar/:pedido_id', pedidoController.pedidoEditar)
-
 module.exports = router

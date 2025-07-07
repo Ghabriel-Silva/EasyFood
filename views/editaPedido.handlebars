@@ -13,14 +13,16 @@
             <div id="flash-msg" class="alert alert-danger">{{error_msg}}</div>
             {{/if}}
 
-            <form action="" method="POST"  id="form-venda">
+            <form action="/atualizar-pedido" method="POST" id="form-venda">
+                <input type="hidden" name="pedido_id" value="{{pedido.pedido_id}}">
 
                 <!-- Cliente -->
                 <div class="mb-3">
                     <label for="cliente" class="form-label">
                         <i class="bi bi-person-fill me-1"></i>Nome do Cliente
                     </label>
-                    <input type="text" class="form-control" id="cliente" name="cliente" value="{{pedido.nome_cliente}}" required>
+                    <input type="text" class="form-control" id="cliente" name="cliente" value="{{pedido.nome_cliente}}"
+                        required>
                 </div>
 
                 <!-- Endereço -->
@@ -28,117 +30,128 @@
                     <label for="endereco" class="form-label">
                         <i class="bi bi-geo-alt-fill me-1"></i>Endereço / Bairro / Ponto de Referência
                     </label>
-                    <input class="form-control" id="endereco" name="endereco" rows="2" value="{{pedido.endereco}}" required></input>
+                    <input class="form-control" id="endereco" name="endereco" value="{{pedido.endereco}}" required>
                 </div>
 
-                {{!-- Entrega --}}
+                <!-- Entrega -->
                 <div class="mb-3">
                     <label class="form-label">
                         <i class="bi bi-truck"></i> Entrega
                     </label>
                     <div class="form-check">
                         <input class="form-check-input entrega" type="radio" name="entrega" id="radio-sim" value="1"
-                            required>
-                        <label class="form-check-label" for="radio-sim">
-                            Sim
-                        </label>
+                            required {{#if (eq pedido.entrega 1)}}checked{{/if}}>
+                        <label class="form-check-label" for="radio-sim">Sim</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input entrega" type="radio" name="entrega" id="radio-nao" value="0"
-                            required>
-                        <label class="form-check-label" for="radio-nao">
-                            Não
-                        </label>
+                            required {{#if (eq pedido.entrega 0)}}checked{{/if}}>
+                        <label class="form-check-label" for="radio-nao">Não</label>
                     </div>
                 </div>
 
-                <!-- Produto + Quantidade -->
+                <!-- Produto e Quantidade -->
                 <div class="bg-light border p-3 rounded mb-4">
                     <h6 class="fw-semibold text-secondary mb-3">
                         <i class="bi bi-cart-plus me-1"></i>Produto e Quantidade
                     </h6>
-
                     <div class="row" id="container">
+                        {{#each pedido.itens }}
                         <div class="row grupo-produto">
                             <div class="col-md-8 mb-3">
-                                <label for="produto-select" class="form-label">Produto:</label>
+                                <label class="form-label">Produto:</label>
                                 <select class="form-select produto-select" name="produto[]" required>
-                                    <option value="">Selecione o produto</option>
-                                    {{#each produtos}}
+                                    
+                                    {{#each ../produtos}}
                                     <option value="{{codigo}}" data-quantidade="{{quantidade}}" data-valor="{{valor}}"
-                                        data-unidade="{{unidade_medida}}">
+                                        data-unidade="{{unidade_medida}}" {{#if (eq codigo
+                                        ../codigo_produto)}}selected{{/if}}>
                                         {{nome}} - {{quantidade}} {{unidade_medida}} disponíveis - {{valor}} R$
-                                        {{unidade_medida}}
                                     </option>
                                     {{/each}}
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-3 ">
-                                <label for="quantidade-select" class="form-label">Quantidade:</label>
-                                <select class="form-select quantidade-select" name="quantidade[]" required>
-                                    <option value="">Selecione</option>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Quantidade:</label>
+                                <select class="form-select quantidade-select" name="quantidade[]" required
+                                    data-selecionada="{{quantidade}}">
+                                    <option value="{{quantidade}}" selected>{{quantidade}} {{unidade_medida}}</option>
                                 </select>
                             </div>
+
+                            <button type="button"
+                                class="btn-editar-deletar btn btn-outline-danger btn-sm text-wrap mx-3 d-inline-block w-auto">
+                                Deletar
+                            </button>
                         </div>
+                        {{/each}}
+
                     </div>
+
+                    <!-- Botão adicionar novo produto -->
                     <div class="d-flex flex-wrap justify-content-end gap-3 px-4">
                         <button type="button" class="btn btn-outline-primary btn-sm text-wrap" id="adicionar-produto">
                             <i class="bi bi-plus-lg me-1"></i>Add Produto
                         </button>
-
                     </div>
-                </div>
-
-                <!-- Valor total -->
-                <div class="mb-3">
-                    <label for="valor_total" class="form-label">
-                        <i class="bi bi-cash-stack me-1"></i>Valor Total (R$)
-                    </label>
-                    <input type="number" step="0.01" class="form-control" id="valor_total" name="valor_total" required
-                        readonly>
-                </div>
 
 
-                <!-- Forma de pagamento -->
-                <div class="mb-3">
-                    <label for="pagamento" class="form-label">
-                        <i class="bi bi-credit-card"></i> Forma de Pagamento
-                    </label>
-                    <select class="form-select" id="pagamento" name="forma_pagamento" required>
-                        <option selected disabled>Selecione</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                        <option value="Pix">Pix</option>
-                        <option value="Cartão">Cartão</option>
-                    </select>
-                </div>
-
-                <!-- Pagamento realizado -->
-                <div class="mb-3">
-                    <label class="form-label">
-                        <i class="bi bi-bag-check"></i> Pagamento Realizado?
-                    </label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="pago" id="pagoSim" value="1" required>
-                        <label class="form-check-label" for="pagoSim">Sim</label>
+                    <!-- Valor total -->
+                    <div class="mb-3">
+                        <label for="valor_total" class="form-label">
+                            <i class="bi bi-cash-stack me-1"></i>Valor Total (R$)
+                        </label>
+                        <input type="number" step="0.01" class="form-control" id="valor_total" name="valor_total"
+                            required readonly value="{{pedido.valor_total}}">
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="pago" id="pagoNao" value="0" required>
-                        <label class="form-check-label" for="pagoNao">Não</label>
+
+                    <!-- Forma de pagamento -->
+                    <div class="mb-3">
+                        <label for="pagamento" class="form-label">
+                            <i class="bi bi-credit-card"></i> Forma de Pagamento
+                        </label>
+                        <select class="form-select" id="pagamento" name="forma_pagamento" required>
+                            <option disabled>Selecione</option>
+                            <option value="Dinheiro" {{#if (eq pedido.forma_pagamento "Dinheiro" )}}selected{{/if}}>
+                                Dinheiro
+                            </option>
+                            <option value="Pix" {{#if (eq pedido.forma_pagamento "Pix" )}}selected{{/if}}>Pix</option>
+                            <option value="Cartão" {{#if (eq pedido.forma_pagamento "Cartão" )}}selected{{/if}}>Cartão
+                            </option>
+                        </select>
                     </div>
-                </div>
 
-                <!-- Observação -->
-                <div class="mb-4">
-                    <label for="observacao" class="form-label">
-                        <i class="bi bi-pencil-square me-1"></i>Observações
-                    </label>
-                    <textarea class="form-control" id="observacao" name="observacao" rows="2"></textarea>
-                </div>
+                    <!-- Pagamento realizado -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-bag-check"></i> Pagamento Realizado?
+                        </label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pago" id="pagoSim" value="1" required
+                                {{#if (eq pedido.foi_pago 1)}}checked{{/if}}>
+                            <label class="form-check-label" for="pagoSim">Sim</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pago" id="pagoNao" value="0" required
+                                {{#if (eq pedido.foi_pago 0)}}checked{{/if}}>
+                            <label class="form-check-label" for="pagoNao">Não</label>
+                        </div>
+                    </div>
 
-                <!-- Botão salvar -->
-                <button type="submit" class="btn btn-success w-100 fw-bold">
-                    <i class="bi bi-save2 me-1"></i>Salvar Pedido
-                </button>
+                    <!-- Observação -->
+                    <div class="mb-4">
+                        <label for="observacao" class="form-label">
+                            <i class="bi bi-pencil-square me-1"></i>Observações
+                        </label>
+                        <textarea class="form-control" id="observacao" name="observacao"
+                            rows="2">{{pedido.observacao}}</textarea>
+                    </div>
+
+                    <!-- Botão salvar -->
+                    <button type="submit" class="btn btn-success w-100 fw-bold">
+                        <i class="bi bi-save2 me-1"></i>Salvar Pedido
+                    </button>
             </form>
         </div>
     </div>
