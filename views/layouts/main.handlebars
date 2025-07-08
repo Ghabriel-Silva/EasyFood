@@ -25,62 +25,71 @@
 <body class=" bg-light">
     {{#unless ocultar_header}}
     <!-- Header Global -->
-    <nav class="navbar navbar-expand-lg bg-light border-bottom px-3">
-        <a class="navbar-brand text-dark fw-bold" href="/">AdminFood</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarConteudo">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+   <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm px-3">
+  <div class="container-fluid">
+    <!-- Marca -->
+    <a class="navbar-brand fw-bold text-dark" href="/">
+      <i class="bi bi-shop"></i> AdminFood
+    </a>
 
-        <div class="collapse navbar-collapse" id="navbarConteudo">
+    <!-- Botão para mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarConteudo"
+      aria-controls="navbarConteudo" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Produtos -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="bi bi-box-seam"></i> Produtos
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/"><i class="bi bi-plus-circle"></i> Cadastrar</a></li>
-                        <li><a class="dropdown-item" href="/estoquedia"><i class="bi bi-egg-fried"></i> Assados
-                                Marisa</a></li>
-                    </ul>
-                </li>
+    <!-- Conteúdo do menu -->
+    <div class="collapse navbar-collapse" id="navbarConteudo">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                <!-- Pedidos -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="bi bi-receipt"></i> Pedidos
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/registro-pedido"><i class="bi bi-pencil-square"></i>
-                                Registrar Pedido</a></li>
-                        <li><a class="dropdown-item" href="/pedidos"><i class="bi bi-list-check"></i> Pedidos Ativos</a>
-                        </li>
-                        <li><a class="dropdown-item" href="/pedidos-finalizados"><i class="bi bi-check2-circle"></i>
-                                Pedidos Finalizados</a></li>
-                    </ul>
-                </li>
+        <!-- Produtos -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownProdutos" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="bi bi-box-seam"></i> Produtos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownProdutos">
+            <li><a class="dropdown-item" href="/"><i class="bi bi-plus-circle me-1"></i> Cadastrar</a></li>
+            <li><a class="dropdown-item" href="/estoquedia"><i class="bi bi-egg-fried me-1"></i> Assados Marisa</a></li>
+          </ul>
+        </li>
 
-                <!-- Registros Inativos -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="bi bi-archive"></i> Registros Inativos
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/produtos-inativos"><i class="bi bi-box"></i> Produtos
-                                Inativos</a></li>
-                        <li><a class="dropdown-item" href="/pedidos-deletados"><i class="bi bi-trash3"></i> Pedidos
-                                Excluídos</a></li>
-                    </ul>
-                </li>
+        <!-- Pedidos -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownPedidos" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="bi bi-receipt"></i> Pedidos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownPedidos">
+            <li><a class="dropdown-item" href="/registro-pedido"><i class="bi bi-pencil-square me-1"></i> Registrar</a></li>
+            <li><a class="dropdown-item" href="/pedidos"><i class="bi bi-list-check me-1"></i> Ativos</a></li>
+            <li><a class="dropdown-item" href="/pedidos-finalizados"><i class="bi bi-check2-circle me-1"></i> Finalizados</a></li>
+          </ul>
+        </li>
 
-            </ul>
-        </div>
-       
-    </nav>
+        <!-- Registros Inativos -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownInativos" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="bi bi-archive"></i> Inativos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownInativos">
+            <li><a class="dropdown-item" href="/produtos-inativos"><i class="bi bi-box me-1"></i> Produtos</a></li>
+            <li><a class="dropdown-item" href="/pedidos-deletados"><i class="bi bi-trash3 me-1"></i> Pedidos</a></li>
+          </ul>
+        </li>
+
+        <!-- Relatórios -->
+        <li class="nav-item">
+          <a class="nav-link" href="/relatorios">
+            <i class="bi bi-bar-chart-line"></i> Relatórios
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 
     {{/unless}}
 
