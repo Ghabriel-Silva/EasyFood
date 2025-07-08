@@ -11,6 +11,7 @@ function buscaPedidoPorFiltro(filtroWhereSql) {
                     p.forma_pagamento,
                     p.foi_pago,
                     p.observacao,
+                    p.numero_pedido_dia,
                     DATE_FORMAT(P.data_pedido,'%d/%m/%Y %H:%i' ) AS data_pedido,
                     p.entrega,
                     ip.quantidade,
@@ -48,6 +49,7 @@ function agruparPedidos(resultado) {
                 observacao: linha.observacao,
                 data_pedido: linha.data_pedido,
                 entrega: linha.entrega,
+                numero_pedido: linha.numero_pedido_dia,
                 itens: []
             };
             pedidosAgrupados.push(pedido);
@@ -63,8 +65,21 @@ function agruparPedidos(resultado) {
 
     return pedidosAgrupados;
 }
+function gerarNumeroPedidoDoDia(dataAtual){
+    return  new Promise((resolve, reject)=>{   
+        const sql = `SELECT MAX(numero_pedido_dia) as maxPedido FROM pedidos WHERE DATE(data_pedido) = ?`
+
+        conexao.query( sql, [dataAtual], (err, retorno)=>{
+            if(err) return reject(err)
+
+            const maxPedido = retorno[0].maxPedido || 0 //  retorna o maior numero da coluna, retorno é um array que contém o objeto maxPedido: { maxPedido: 3 } // ← esse é retorno[0]
+            resolve(maxPedido + 1)
+        })
+    })
+}
 
 module.exports = {
     agruparPedidos,
-    buscaPedidoPorFiltro
+    buscaPedidoPorFiltro, 
+    gerarNumeroPedidoDoDia
 }

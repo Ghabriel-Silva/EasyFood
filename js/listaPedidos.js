@@ -1,6 +1,7 @@
 document.querySelectorAll('.btn-ver').forEach(btn => {
     btn.addEventListener('click', function () {
-        document.getElementById('modal-titulo').textContent = `Pedido #${this.dataset.pedido_id}`;
+
+        document.getElementById('modal-titulo').textContent = `Pedido #${this.dataset.numero_pedido}`;
         document.getElementById('modal-nome').textContent = this.dataset.nome_cliente;
         document.getElementById('modal-endereco').textContent = this.dataset.endereco;
         document.getElementById('modal-valor').textContent = this.dataset.valor_total;
@@ -81,7 +82,8 @@ document.querySelectorAll('.btn-ver').forEach(btn => {
 document.querySelectorAll('.btn-delete').forEach(btn => {
     btn.addEventListener('click', function () {
         const pedido_id = this.dataset.pedido_id
-        document.getElementById('modal-delete').textContent = `Excluir pedido  #${pedido_id}`;
+        const numero_Pedido = this.dataset.numero_pedido
+        document.getElementById('modal-delete').textContent = `Excluir pedido  #${numero_Pedido}`;
         document.getElementById('btn-confirm-delete').href = `/deletar-pedido/${pedido_id}`
     })
 })

@@ -23,7 +23,7 @@
             <tbody>
                 {{#each pedidos}}
                 <tr>
-                    <th scope="row">#{{pedido_id}}</th>
+                    <th scope="row">#{{numero_pedido}}</th>
                     <td>{{nome_cliente}} </td>
                     <td>{{data_pedido}}</td>
                     <td>R$ {{valor_total}}</td>
@@ -54,7 +54,7 @@
                     <td>
                         <button type="button" class="btn btn-secondary btn-sm btn-ver" data-bs-toggle="modal"
                             data-bs-target="#staticBackdrop" data-pedido_id="{{pedido_id}}"
-                            data-nome_cliente="{{nome_cliente}}" data-endereco="{{endereco}}"
+                            data-nome_cliente="{{nome_cliente}}" data-endereco="{{endereco}}" data-numero_pedido="{{numero_pedido}}"
                             data-valor_total="{{valor_total}}" data-forma_pagamento="{{forma_pagamento}}"
                             data-foi_pago="{{foi_pago}}" data-observacao="{{observacao}}"
                             data-data_pedido="{{data_pedido}}" data-entrega="{{entrega}}" data-itens='{{{json itens}}}'>

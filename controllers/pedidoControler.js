@@ -1,7 +1,7 @@
 const conexao = require('../config/dataBase')
 const path = require('path');
 const fs = require('fs');
-const { agruparPedidos, buscaPedidoPorFiltro } = require('../helpers/pedidosHelpers')
+const { agruparPedidos, buscaPedidoPorFiltro, gerarNumeroPedidoDoDia } = require('../helpers/pedidosHelpers')
 
 
 module.exports = {
@@ -37,7 +37,8 @@ module.exports = {
                 const quantidadePedido = parseFloat(quantidade[i])
 
                 // Encontra o produto no resultado do banco
-                const produtoAtual = resultados.find(p => p.codigo == codigoProduto) //Retorna primeiro objeto dentro do array resultados que tenha p.codigo igual ao valor de codigoProduto.
+                const produtoAtual = resultados.find(p => p.codigo == codigoProduto) //Retorna primeiro objeto dentro do array resultados que 
+                // tenha p.codigo igual ao valor de codigoProduto.
 
                 if (!produtoAtual) {
                     return res.status(404).send(`Produto com código ${codigoProduto} não encontrado.`);
@@ -58,10 +59,16 @@ module.exports = {
             }
 
             //Adcionando ao banco de dados os pedidos os valores recebidos da req
+
+            //Geral numero do pedido Id
+            const dataHoje = new Date().toISOString().slice(0, 10)
+            const numeroPedido = await gerarNumeroPedidoDoDia(dataHoje)
+
             const pedidoId = await new Promise((resolve, reject) => {
-                const sql = `INSERT  INTO pedidos(nome_cliente, endereco, valor_total, forma_pagamento, foi_pago, observacao, entrega) 
-                VALUES(?, ?, ?, ?, ?, ?, ?)`
-                const valores = [cliente, endereco, valor_total, forma_pagamento, pago, observacao, entrega]
+                const sql = `INSERT  INTO pedidos(nome_cliente, endereco, valor_total, forma_pagamento, foi_pago, observacao, entrega, numero_pedido_dia ) 
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?)`
+                const valores = [cliente, endereco, valor_total, forma_pagamento, pago, observacao, entrega, numeroPedido]
+                console.log('Valores do pedido a inserir:', valores);
 
                 conexao.query(sql, valores, function (erro, retorno) {
                     if (erro) {
@@ -122,15 +129,27 @@ module.exports = {
     //Rota Para deletar pedido
     deletarPedido: (req, res) => {
         const codigo = req.params.pedido_id
-        const sql = `UPDATE pedidos SET deletado = TRUE WHERE id = ?`
+        const numeroPedido = `SELECT numero_pedido_dia FROM pedidos WHERE id = ?`
+        const deletarQuery = `UPDATE pedidos SET deletado = TRUE WHERE id = ?`
 
-        conexao.query(sql, [codigo], function (erro, retorno) {
-            if (erro) {
-                console.log('erro ao atualizar produto', erro)
+
+        conexao.query(numeroPedido, [codigo], function (erro1, retorno1) {
+            if (erro1) {
+                console.log('erro ao atualizar produto', erro1)
                 return res.status(500).send('Erro ao deletar Pedido')
             }
-            req.flash('success_msg', `Pedido removido #${codigo} com sucesso`)
-            res.redirect('/pedidos')
+            const numeroPedidoDia= retorno1[0]?.numero_pedido_dia //gue o valor de numero_pedido_dia do primeiro resultado,mas só se ele existir — senão, 
+            // fique como undefined.
+
+            conexao.query(deletarQuery, [codigo], (erro2) => {
+                if (erro2) {
+                    console.error('Erro ao deletar pedido:', erro2);
+                    return res.status(500).send('Erro ao deletar pedido');
+                }
+
+                req.flash('success_msg', `Pedido #${numeroPedidoDia || codigo} removido com sucesso`);
+                res.redirect('/pedidos');
+            });
         })
     },
 
@@ -212,7 +231,7 @@ module.exports = {
         })
     },
 
-    relatorios:  (req, res) => {
+    relatorios: (req, res) => {
         res.render('relatorios')
     }
 }
