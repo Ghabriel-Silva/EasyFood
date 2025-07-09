@@ -1,7 +1,8 @@
 const conexao = require('../config/dataBase')
 const path = require('path');
 const fs = require('fs');
-const { agruparPedidos, buscaPedidoPorFiltro, gerarNumeroPedidoDoDia } = require('../helpers/pedidosHelpers')
+const { agruparPedidos, buscaPedidoPorFiltro, gerarNumeroPedidoDoDia, pegaNumeroDoPedido } = require('../helpers/pedidosHelpers')
+const Estatisticas = require('../models/estaticasModel')
 
 
 module.exports = {
@@ -138,7 +139,7 @@ module.exports = {
                 console.log('erro ao atualizar produto', erro1)
                 return res.status(500).send('Erro ao deletar Pedido')
             }
-            const numeroPedidoDia= retorno1[0]?.numero_pedido_dia //gue o valor de numero_pedido_dia do primeiro resultado,mas só se ele existir — senão, 
+            const numeroPedidoDia = retorno1[0]?.numero_pedido_dia //pegue o valor de numero_pedido_dia do primeiro resultado,mas só se ele existir — senão, 
             // fique como undefined.
 
             conexao.query(deletarQuery, [codigo], (erro2) => {
@@ -166,17 +167,25 @@ module.exports = {
     },
 
     //rota reativar pedidos
-    pedidosReativar: (req, res) => {
-        const codigo = req.params.pedido_id
-        const sql = `UPDATE pedidos SET deletado = FALSE WHERE id = ?`
-        conexao.query(sql, [codigo], (err, retorno) => {
-            if (err) {
-                console.error('Pedido não atualizado', err)
-                res.status(500).send('Pedido não atualizado')
-            }
-            req.flash('success_msg', `Pedido  #${codigo} Reativado!`)
-            res.redirect('/pedidos-deletados')
-        })
+    pedidosReativar: async (req, res) => {
+        try {
+            const codigo = req.params.pedido_id
+            const numero = await pegaNumeroDoPedido(codigo)
+
+            const sql = `UPDATE pedidos SET deletado = FALSE WHERE id = ?`
+            conexao.query(sql, [codigo], (err, retorno) => {
+                if (err) {
+                    console.error('Pedido não atualizado', err)
+                    res.status(500).send('Pedido não atualizado')
+                }
+
+                req.flash('success_msg', `Pedido  #${numero} Reativado!`)
+                return res.redirect('/pedidos-deletados')
+            })
+        } catch (erro) {
+            console.log(erro)
+            return res.status(500).send('Pedido não reativado')
+        }
     },
 
     //Imprimir pedido
@@ -193,17 +202,23 @@ module.exports = {
     },
 
     //Rota para concluir pedido
-    pedidoConcluir: (req, res) => {
-        const id = req.params.pedido_id
-        const sql = `UPDATE pedidos SET concluido = TRUE , foi_pago = TRUE WHERE  id = ?`
-        conexao.query(sql, [id], function (erro, retorno) {
-            if (erro) {
-                console.error('Pedido não concluido erro:', erro)
-                res.status(500).send('Pedido não concluido! Erro Servidor')
-            }
-            req.flash('success_msg', `Pedido #${id}  Concluido!`)
-            res.redirect('/pedidos')
-        })
+    pedidoConcluir: async (req, res) => {
+        try {
+            const id = req.params.pedido_id
+            const sql = `UPDATE pedidos SET concluido = TRUE , foi_pago = TRUE WHERE  id = ?`
+            const numero = await pegaNumeroDoPedido(id)
+            conexao.query(sql, [id], function (erro, retorno) {
+                if (erro) {
+                    console.error('Pedido não concluido erro:', erro)
+                    return res.status(500).send('Pedido não concluido! Erro Servidor')
+                }
+                req.flash('success_msg', `Pedido #${numero}  Concluido!`)
+                return res.redirect('/pedidos')
+            })
+        } catch (erro) {
+            console.log('erro ao concluir pedido', erro)
+            return res.status(500).send('Erro interno ao processar a conclução do pedido')
+        }
     },
     //Rota para Exibir pedidos finalizados
     pedidosFinalizados: async (req, res) => {
@@ -218,20 +233,35 @@ module.exports = {
     },
 
     //Voltar pedido
-    pedidosVoltar: (req, res) => {
-        const id = req.params.pedido_id
-        const sql = 'UPDATE pedidos SET concluido = FALSE WHERE id = ?'
-        conexao.query(sql, [id], function (erro, retorno) {
-            if (erro) {
-                console.error('Erro ao voltar o pedidos', erro)
-                res.status(500).send('erro ao Voltar pedido')
-            }
-            req.flash('success_msg', `Pedido #${id} voltou para pendente.`)
-            res.redirect('/pedidos-finalizados')
-        })
+    pedidosVoltar: async (req, res) => {
+        try {
+            const id = req.params.pedido_id
+            const sql = 'UPDATE pedidos SET concluido = FALSE WHERE id = ?'
+            const numero = await pegaNumeroDoPedido(id)
+            conexao.query(sql, [id], function (erro, retorno) {
+                if (erro) {
+                    console.error('Erro ao voltar o pedidos', erro)
+                    return res.status(500).send('erro ao Voltar pedido')
+                }
+                req.flash('success_msg', `Pedido #${numero} voltou para pendente.`)
+                return res.redirect('/pedidos-finalizados')
+            })
+
+        } catch (erro) {
+            console.log('Erro ao Voltar Pedido')
+            return res.status(500).send('Erro interno ao voltar pedido')
+        }
     },
 
-    relatorios: (req, res) => {
-        res.render('relatorios')
+    relatorios: async (req, res) => {
+        try {
+            const hoje = await Estatisticas.vendasDoDia()
+
+            return res.render('relatorios', {
+                vendasHoje :hoje.pedidos_hoje || 0
+            })
+        } catch (err) {
+            console.log(err)
+        }
     }
 }

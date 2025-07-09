@@ -78,8 +78,21 @@ function gerarNumeroPedidoDoDia(dataAtual){
     })
 }
 
+function pegaNumeroDoPedido(id){
+    return new Promise((resolve, reject)=>{
+        const pegaNumero  = `SELECT numero_pedido_dia FROM pedidos WHERE id = ${id}`
+        conexao.query(pegaNumero, (err, retorno)=>{
+            if(err) return reject(err)
+            const numeroPedidoDia = retorno[0]?.numero_pedido_dia
+            return resolve(numeroPedidoDia)
+        })
+    })
+    
+}
+
 module.exports = {
     agruparPedidos,
     buscaPedidoPorFiltro, 
-    gerarNumeroPedidoDoDia
+    gerarNumeroPedidoDoDia, 
+    pegaNumeroDoPedido
 }
