@@ -111,25 +111,25 @@ O projeto é escalável e pode receber atualizações conforme novas necessidade
 ## 🖼️ Capturas de Tela
 
 ### Tela de Login
-![Tela de Login](./imagereadme/login.png)
+![Tela de Login](./imageReadme/login.png)
 
 ### Tela de Pedidos
-![Tela de Pedidos](./imagereadme/pedidosativos.png)
+![Tela de Pedidos](./imageReadme/pedidosativos.png)
 
 ### Tela de Produtos
-![Tela de Produtos](./imagereadme/estoque.png)
+![Tela de Produtos](./imageReadme/estoque.png)
 
 ### Relatórios
-![Tela de Relatórios](./imagereadme/relatorios.png)
+![Tela de Relatórios](./imageReadme/relatorios.png)
 
 ### Pedidos deletados
-![Pedidos Deletados](./imagereadme/pedidosDeletados.png)
+![Pedidos Deletados](./imageReadme/pedidosDeletados.png)
 
 ### Produtos inativos
-![Produtos Inativos](./imagereadme/produtosInativos.png)
+![Produtos Inativos](./imageReadme/produtosInativos.png)
 
 ### Cadastro de Produtos
-![Cadastro de Produtos](./imagereadme/cadastroprodutos.png)
+![Cadastro de Produtos](./imageReadme/cadastroprodutos.png)
 
 
 
