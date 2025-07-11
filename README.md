@@ -55,34 +55,82 @@ O projeto é escalável e pode receber atualizações conforme novas necessidade
 
 ## 🧱 Estrutura do Projeto
 
-<pre><code>📁 config ├── express.js # Configuração do Express e middlewares ├── dataBase.js # Conexão com o MySQL 📁 controllers ├── produtoController.js ├── pedidoController.js ├── loginController.js 📁 css ├── styles.css # Estilização complementar 📁 helpers ├── pedidosHelpers.js # Funções auxiliares usadas nos relatórios e pedidos 📁 image ├── ... # Imagens relacionadas aos produtos 📁 js ├── flash.js # Lógica do front-end para mensagens flash ├── listaPedidos.js # Controle visual da lista de pedidos ├── pedidos.js # Interações do front com os pedidos ├── relatorios.js # Comunicação com a rota de relatórios via fetch 📁 middlewares ├── autenticado.js # Middleware para verificar se o usuário está autenticado 📁 models ├── estaticasModel.js # Todas as queries do sistema (produtos, pedidos, etc.) 📁 routes ├── produto.js # Rotas de produtos ├── pedido.js # Rotas de pedidos ├── login.js # Login e logout 📁 views ├── layouts/ # Layout principal (main.handlebars) ├── partials/ # Componentes reutilizáveis (ex: header, footer) ├── login.handlebars # Tela de login ├── estoque.handlebars # Página de estoque ├── pedidos.handlebars # Página de pedidos ├── relatorios.handlebars# Página de relatórios 📁 public ├── css/ # Estilos públicos ├── js/ # Scripts públicos ├── imagens/ # Imagens acessíveis no front-end </code></pre>
+```bash
+    📁 config
+├── express.js # Configuração do Express e middlewares
+├── dataBase.js # Conexão com o MySQL
+
+📁 controllers
+├── produtoController.js
+├── pedidoController.js
+├── loginController.js
+
+📁 css
+├── styles.css # Estilização complementar
+
+📁 helpers
+├── pedidosHelpers.js # Funções auxiliares usadas nos relatórios e pedidos
+
+📁 image
+├── ... # Imagens relacionadas aos produtos
+
+📁 js
+├── flash.js # Lógica do front-end para mensagens flash
+├── listaPedidos.js # Controle visual da lista de pedidos
+├── pedidos.js # Interações do front com os pedidos
+├── relatorios.js # Comunicação com a rota de relatórios via fetch
+
+📁 middlewares
+├── autenticado.js # Middleware para verificar se o usuário está autenticado
+
+📁 models
+├── estaticasModel.js # Todas as queries do sistema (produtos, pedidos, etc.)
+
+📁 routes
+├── produto.js # Rotas de produtos
+├── pedido.js # Rotas de pedidos
+├── login.js # Login e logout
+
+📁 views
+├── layouts/ # Layout principal (main.handlebars)
+├── partials/ # Componentes reutilizáveis (ex: header, footer)
+├── login.handlebars # Tela de login
+├── estoque.handlebars # Página de estoque
+├── pedidos.handlebars # Página de pedidos
+├── relatorios.handlebars# Página de relatórios
+
+📁 public
+├── css/ # Estilos públicos
+├── js/ # Scripts públicos
+├── imagens/ # Imagens acessíveis no front-end
+```
 
 
 ---
 
 ## 🖼️ Capturas de Tela
 
-```markdown
 ### Tela de Login
-![Tela de Login](./imageReadme/login.png)
+![Tela de Login](./ImageReader/login.png)
 
 ### Tela de Pedidos
-![Tela de Pedidos](./imageReadme/pedidosativos.png)
+![Tela de Pedidos](./ImageReader/pedidosativos.png)
 
 ### Tela de Produtos
-![Tela de Produtos](./imageReadme/estoque.png)
+![Tela de Produtos](./ImageReader/estoque.png)
 
 ### Relatórios
-![Tela de Relatórios](./imageReadme/relatorios.png)
+![Tela de Relatórios](./ImageReader/relatorios.png)
 
 ### Pedidos deletados
-![Tela de Relatórios](./imageReadme/pedidosDeletados.png)
+![Pedidos Deletados](./ImageReader/pedidosDeletados.png)
 
-### produtos inativos
-![Tela de Relatórios](./imageReadme/produtosInativos.png)
+### Produtos inativos
+![Produtos Inativos](./ImageReader/produtosInativos.png)
 
 ### Cadastro de Produtos
-![Tela de Relatórios](./imageReadme/cadastroprodutos.png)
+![Cadastro de Produtos](./ImageReader/cadastroprodutos.png)
+
 
 
 # Clone o repositório
