@@ -116,6 +116,12 @@ O projeto é escalável e pode receber atualizações conforme novas necessidade
 ### Tela de Pedidos
 ![Tela de Pedidos](./imageReadme/pedidosativos.png)
 
+### Modal  ver Pedido
+![Tela de Pedidos](./imageReadme/verpedido.png)
+
+### Modal deletar Pedido
+![Tela de Pedidos](./imageReadme/deletapedido.png)
+
 ### Tela de Produtos
 ![Tela de Produtos](./imageReadme/estoque.png)
 
@@ -130,6 +136,9 @@ O projeto é escalável e pode receber atualizações conforme novas necessidade
 
 ### Cadastro de Produtos
 ![Cadastro de Produtos](./imageReadme/cadastroprodutos.png)
+
+### Imprimir Pedido
+![Tela de Pedidos](./imageReadme/imprimir.png)
 
 
 
