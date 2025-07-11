@@ -5,10 +5,12 @@ const flash = require('connect-flash')
 const fileupload = require('express-fileupload')
 const path = require('path')
 const { engine } = require('express-handlebars')
+const autenticado = require('../middlewares/autenticado');
 
 // Rotas
 const produtosRoute = require('../routes/produto')
 const pedidosRoute = require('../routes/pedido')
+const authRoutes = require('../routes/login')
 
 const app = express()
 
@@ -28,6 +30,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(fileupload())
 
+
 app.use(session({
     secret: '@Gs189970',
     resave: false,
@@ -41,6 +44,13 @@ app.use((req, res, next) => {
     next()
 })
 
+app.use((req, res, next) => {
+    res.locals.usuario = req.session.usuario;
+    next();
+});
+
+app.use(authRoutes)
+
 // Pastas públicas
 app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap/dist')))
 app.use('/js', express.static(path.join(__dirname, '../js')))
@@ -48,7 +58,7 @@ app.use('/css', express.static(path.join(__dirname, '../css')))
 app.use('/imagem', express.static(path.join(__dirname, '../image')))
 
 // Rotas
-app.use('/', produtosRoute)
-app.use('/', pedidosRoute)
+app.use('/',  autenticado,  produtosRoute)
+app.use('/',  autenticado, pedidosRoute)
 
 module.exports = app

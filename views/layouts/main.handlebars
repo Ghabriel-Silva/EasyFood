@@ -23,6 +23,7 @@
 </head>
 
 <body class=" bg-light">
+  {{#if usuario}}
   {{#unless ocultar_header}}
   <!-- Header Global -->
   <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm px-3">
@@ -87,12 +88,14 @@
             </a>
           </li>
         </ul>
+        <a href="/logout" class="btn btn-outline-danger btn-sm">Sair</a>
       </div>
     </div>
   </nav>
 
 
   {{/unless}}
+  {{/if}}
 
   <div class="container mt-4">
     <!-- Aqui serão inseridos os conteúdos das views -->

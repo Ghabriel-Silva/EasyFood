@@ -84,5 +84,9 @@ tbody td {
 .status-entregar{
   color: #28a745;
 }
-
+.login{
+  height: 95vh;
+  align-items: center;
+  overflow: hidden;
+}
 

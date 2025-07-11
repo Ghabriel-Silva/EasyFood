@@ -11,6 +11,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "bootstrap": "^5.3.6",
     "connect-flash": "^0.1.1",
     "dayjs": "^1.11.13",
