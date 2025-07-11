@@ -252,16 +252,60 @@ module.exports = {
             return res.status(500).send('Erro interno ao voltar pedido')
         }
     },
-
-    relatorios: async (req, res) => {
+    buscaDados: async (req, res) => {
         try {
-            const hoje = await Estatisticas.vendasDoDia()
+            const mes = parseInt(req.body.mes)
+            const ano = parseInt(req.body.ano)
 
-            return res.render('relatorios', {
-                vendasHoje :hoje.pedidos_hoje || 0
+            const [mediaVendaMensal, mediaVendasSemana, mediaValorMensal, totalPedidoConcluido, produtosMaisVendidos, formaPagamentoMaisUsada, pedidosCanceladosExcluidos] = await Promise.all([
+                Estatisticas.vendasMensais(mes, ano),
+                Estatisticas.mediaPedidosPorSemana(mes, ano),
+                Estatisticas.mediaValorDoPedidosMensal(mes, ano),
+                Estatisticas.totalPedidosConcluídos(mes, ano),
+                Estatisticas.produtosMaisVendido(mes, ano),
+                Estatisticas.formaPagamentoMaisUsada(mes, ano),
+                Estatisticas.pedidosCanceladosExcluidos(mes, ano)
+            ])
+
+            //calcular mês anterior
+            let mesAnterior = mes - 1
+            let anoAnterior = ano
+
+            if (mesAnterior === 0) {
+                mesAnterior = 12
+                anoAnterior = ano - 1
+            }
+            const [
+                vendasMesAnterior,
+                valorMesAnterior
+            ] = await Promise.all([
+                Estatisticas.vendasMensais(mesAnterior, anoAnterior),
+                Estatisticas.mediaValorDoPedidosMensal(mesAnterior, anoAnterior),
+
+            ])
+
+            res.json({
+                mediaVendaMensal,
+                mediaVendasSemana,
+                mediaValorMensal,
+                totalPedidoConcluido,
+                produtosMaisVendidos,
+                formaPagamentoMaisUsada,
+                pedidosCanceladosExcluidos, 
+                comparativo:{
+                    vendasMesAnterior,
+                    valorMesAnterior
+                }
             })
         } catch (err) {
-            console.log(err)
+            console.error(err)
+            res.status(500).json({ error: 'Erro ao buscar dados' })
         }
+    },
+
+    relatorios: async (req, res) => {
+
+        return res.render('relatorios', {
+        })
     }
 }

@@ -13,4 +13,6 @@ router.get('/pedido-concluido/:pedido_id', pedidoController.pedidoConcluir)
 router.get('/pedidos-finalizados', pedidoController. pedidosFinalizados)
 router.get('/voltar-pedido/:pedido_id', pedidoController.pedidosVoltar)
 router.get('/relatorios', pedidoController.relatorios)
+router.post('/buscaDados', pedidoController.buscaDados)
+
 module.exports = router

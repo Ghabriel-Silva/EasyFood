@@ -1,6 +1,6 @@
 <main>
     <h2 class="text-center fw-bold mb-5">Pedidos Ativos</h2>
-    <div>
+    <div class="table-responsive">
         {{#if success_msg}}
         <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
         {{/if}}
@@ -15,7 +15,7 @@
                     <th scope="col">Pedido</th>
                     <th scope="col">Cliente</th>
                     <th scope="col">Data/Hora</th>
-                    <th scope="col">Valor total</th>
+                    <th scope="col">Valor</th>
                     <th scope="col">Pagamento</th>
                     <th scope="col">Entrega</th>
                     <th scope="col">Ações</th>
@@ -53,96 +53,99 @@
                     </td>
                     {{/if}}
                     <td>
-                        <a href="/imprimir-pedido/{{pedido_id}}" target="_blank" class="btn btn-primary btn-sm">
-                            <i class="bi bi-printer"></i>
-                        </a>
-                        <button type="button" class="btn btn-secondary btn-sm btn-ver" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop" data-pedido_id="{{pedido_id}}" data-numero_pedido="{{numero_pedido}}"
-                            data-nome_cliente="{{nome_cliente}}" data-endereco="{{endereco}}"
-                            data-valor_total="{{valor_total}}" data-forma_pagamento="{{forma_pagamento}}"
-                            data-foi_pago="{{foi_pago}}" data-observacao="{{observacao}}"
-                            data-data_pedido="{{data_pedido}}" data-entrega="{{entrega}}" data-unidade="{{unidade_medida}}" data-itens='{{{json itens}}}'>
-                            <i class="bi bi-eye"></i>
-                        </button>
-
-                        {{!-- Modal deletar --}}
-                        <button type="button" class="btn btn-danger btn-sm btn-delete" data-bs-toggle="modal"
-                            data-bs-target="#modalDelete" data-pedido_id="{{pedido_id}}" data-numero_pedido="{{numero_pedido}}" ><i
-                                class="bi bi-trash3"></i></button>
-                        <!-- Modal deletr -->
-                        <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-delete"></h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Tem certeza que deseja excluir este pedido?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Não</button>
-                                        <a type="button" id="btn-confirm-delete" class="btn btn-primary"
-                                            href="#">Sim</a>
+                        <div  class="d-flex flex-nowrap gap-2">
+                            <a href="/imprimir-pedido/{{pedido_id}}" target="_blank" class="btn btn-primary btn-sm">
+                                <i class="bi bi-printer"></i>
+                            </a>
+                            <button type="button" class="btn btn-secondary btn-sm btn-ver" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop" data-pedido_id="{{pedido_id}}"
+                                data-numero_pedido="{{numero_pedido}}" data-nome_cliente="{{nome_cliente}}"
+                                data-endereco="{{endereco}}" data-valor_total="{{valor_total}}"
+                                data-forma_pagamento="{{forma_pagamento}}" data-foi_pago="{{foi_pago}}"
+                                data-observacao="{{observacao}}" data-data_pedido="{{data_pedido}}"
+                                data-entrega="{{entrega}}" data-unidade="{{unidade_medida}}"
+                                data-itens='{{{json itens}}}'>
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            {{!-- Modal deletar --}}
+                            <button type="button" class="btn btn-danger btn-sm btn-delete" data-bs-toggle="modal"
+                                data-bs-target="#modalDelete" data-pedido_id="{{pedido_id}}"
+                                data-numero_pedido="{{numero_pedido}}"><i class="bi bi-trash3"></i></button>
+                            <!-- Modal deletr -->
+                            <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-delete"></h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Tem certeza que deseja excluir este pedido?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Não</button>
+                                            <a type="button" id="btn-confirm-delete" class="btn btn-primary"
+                                                href="#">Sim</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Modal Mostar pedido-->
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
-                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-scrollable">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-titulo"></h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3"><strong>Nome:</strong> <span id="modal-nome"></span></div>
-                                        <div class="mb-3"><strong>Endereço:</strong> <span id="modal-endereco"></span>
+                            <!-- Modal Mostar pedido-->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-titulo"></h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
                                         </div>
-                                        <div class="mb-3"><strong>Valor Total:</strong> <span
-                                                class="text-success fw-bold">R$ <span id="modal-valor"></span></span>
+                                        <div class="modal-body">
+                                            <div class="mb-3"><strong>Nome:</strong> <span id="modal-nome"></span></div>
+                                            <div class="mb-3"><strong>Endereço:</strong> <span
+                                                    id="modal-endereco"></span>
+                                            </div>
+                                            <div class="mb-3"><strong>Valor Total:</strong> <span
+                                                    class="text-success fw-bold">R$ <span
+                                                        id="modal-valor"></span></span>
+                                            </div>
+                                            <div class="mb-3"><strong>Forma de Pagamento:</strong> <span
+                                                    id="modal-pagamento" class="badge bg-info text-dark"></span></div>
+                                            <div class="mb-3">
+                                                <strong>Foi Pago:</strong> <span id="modal-pago" class="badge"></span>
+                                            </div>
+                                            <div class="mb-3"><strong>Observação:</strong> <span id="modal-observacao"
+                                                    class="fst-italic text-muted"></span></div>
+                                            <div class="mb-3"><strong>Data do Pedido:</strong> <span id="modal-data"
+                                                    class="text-secondary"></span></div>
+                                            <div class="mb-4"><strong>Entrega:</strong> <span id="modal-entrega"
+                                                    class="text-dark"></span></div>
+                                            <h5 class="mt-4">Itens do Pedido:</h5>
+                                            <div id="modal-itens-container" class="row g-2"></div>
                                         </div>
-                                        <div class="mb-3"><strong>Forma de Pagamento:</strong> <span
-                                                id="modal-pagamento" class="badge bg-info text-dark"></span></div>
-                                        <div class="mb-3">
-                                            <strong>Foi Pago:</strong> <span id="modal-pago" class="badge"></span>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Fechar</button>
+                                            <a type="button" class="btn btn-success" id="btn-concluir-pedido"
+                                                href="#">Concluir</a>
                                         </div>
-                                        <div class="mb-3"><strong>Observação:</strong> <span id="modal-observacao"
-                                                class="fst-italic text-muted"></span></div>
-                                        <div class="mb-3"><strong>Data do Pedido:</strong> <span id="modal-data"
-                                                class="text-secondary"></span></div>
-                                        <div class="mb-4"><strong>Entrega:</strong> <span id="modal-entrega"
-                                                class="text-dark"></span></div>
-
-                                        <h5 class="mt-4">Itens do Pedido:</h5>
-                                        <div id="modal-itens-container" class="row g-2"></div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Fechar</button>
-                                        <a type="button" class="btn btn-success" id="btn-concluir-pedido" href="#">Concluir</a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-
                     </td>
-                </tr>
+    </div>
+    </tr>
 
-                {{/each}}
-            </tbody>
-        </table>
+    {{/each}}
+    </tbody>
+    </table>
 
-        {{else}}
-        <div class="alert alert-info text-center">Nenhum pedido recebido ainda.</div>
-        {{/if}}
+    {{else}}
+    <div class="alert alert-info text-center">Nenhum pedido recebido ainda.</div>
+    {{/if}}
     </div>
 </main>

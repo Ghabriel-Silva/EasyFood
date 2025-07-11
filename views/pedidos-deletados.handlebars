@@ -1,6 +1,6 @@
 <main>
     <h2 class="text-center fw-bold mb-5">Pedidos Deletados</h2>
-    <div>
+    <div class="table-responsive">
          {{#if success_msg}}
         <div id="flash-msg" class="alert alert-success">{{success_msg}}</div>
         {{/if}}
@@ -15,7 +15,7 @@
                     <th scope="col">Pedido</th>
                     <th scope="col">Cliente</th>
                     <th scope="col">Data/Hora</th>
-                    <th scope="col">Valor total</th>
+                    <th scope="col">Valor</th>
                     <th scope="col">Pagamento</th>
                     <th scope="col">Entrega</th>
                     <th scope="col">Ações</th>
@@ -53,51 +53,53 @@
                     </td>
                     {{/if}}
                     <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-ver" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop" data-pedido_id="{{pedido_id}}"
-                            data-nome_cliente="{{nome_cliente}}" data-endereco="{{endereco}}" data-numero_pedido="{{numero_pedido}}"
-                            data-valor_total="{{valor_total}}" data-forma_pagamento="{{forma_pagamento}}"
-                            data-foi_pago="{{foi_pago}}" data-observacao="{{observacao}}"
-                            data-data_pedido="{{data_pedido}}" data-entrega="{{entrega}}" data-itens='{{{json itens}}}'>
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        <!-- Modal Mostar pedido-->
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
-                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-scrollable">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-titulo"></h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                        <div  class="d-flex flex-nowrap gap-2">
+                            <button type="button" class="btn btn-secondary btn-sm btn-ver" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop" data-pedido_id="{{pedido_id}}"
+                                data-nome_cliente="{{nome_cliente}}" data-endereco="{{endereco}}" data-numero_pedido="{{numero_pedido}}"
+                                data-valor_total="{{valor_total}}" data-forma_pagamento="{{forma_pagamento}}"
+                                data-foi_pago="{{foi_pago}}" data-observacao="{{observacao}}"
+                                data-data_pedido="{{data_pedido}}" data-entrega="{{entrega}}" data-itens='{{{json itens}}}'>
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <!-- Modal Mostar pedido-->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-titulo"></h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3"><strong>Nome:</strong> <span id="modal-nome"></span></div>
+                                            <div class="mb-3"><strong>Endereço:</strong> <span id="modal-endereco"></span>
+                                            </div>
+                                            <div class="mb-3"><strong>Valor Total:</strong> <span
+                                                    class="text-success fw-bold">R$ <span id="modal-valor"></span></span>
+                                            </div>
+                                            <div class="mb-3"><strong>Forma de Pagamento:</strong> <span
+                                                    id="modal-pagamento" class="badge bg-info text-dark"></span></div>
+                                            <div class="mb-3">
+                                                <strong>Foi Pago:</strong> <span id="modal-pago" class="badge"></span>
+                                            </div>
+                                            <div class="mb-3"><strong>Observação:</strong> <span id="modal-observacao"
+                                                    class="fst-italic text-muted"></span></div>
+                                            <div class="mb-3"><strong>Data do Pedido:</strong> <span id="modal-data"
+                                                    class="text-secondary"></span></div>
+                                            <div class="mb-4"><strong>Entrega:</strong> <span id="modal-entrega"
+                                                    class="text-dark"></span></div>
+                                            <h5 class="mt-4">Itens do Pedido:</h5>
+                                            <div id="modal-itens-container" class="row g-2"></div>
+                                        </div>
+                            
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3"><strong>Nome:</strong> <span id="modal-nome"></span></div>
-                                        <div class="mb-3"><strong>Endereço:</strong> <span id="modal-endereco"></span>
-                                        </div>
-                                        <div class="mb-3"><strong>Valor Total:</strong> <span
-                                                class="text-success fw-bold">R$ <span id="modal-valor"></span></span>
-                                        </div>
-                                        <div class="mb-3"><strong>Forma de Pagamento:</strong> <span
-                                                id="modal-pagamento" class="badge bg-info text-dark"></span></div>
-                                        <div class="mb-3">
-                                            <strong>Foi Pago:</strong> <span id="modal-pago" class="badge"></span>
-                                        </div>
-                                        <div class="mb-3"><strong>Observação:</strong> <span id="modal-observacao"
-                                                class="fst-italic text-muted"></span></div>
-                                        <div class="mb-3"><strong>Data do Pedido:</strong> <span id="modal-data"
-                                                class="text-secondary"></span></div>
-                                        <div class="mb-4"><strong>Entrega:</strong> <span id="modal-entrega"
-                                                class="text-dark"></span></div>
-                                        <h5 class="mt-4">Itens do Pedido:</h5>
-                                        <div id="modal-itens-container" class="row g-2"></div>
-                                    </div>
-                                    
                                 </div>
                             </div>
+                            <a type="button" class="btn btn-primary btn-sm" href="/reativar-pedido/{{pedido_id}}">Reativar</a>
+                                                </td>
                         </div>
-                        <a type="button" class="btn btn-primary btn-sm" href="/reativar-pedido/{{pedido_id}}">Reativar Pedido</a>
-                    </td>
                 </tr>
 
                 {{/each}}

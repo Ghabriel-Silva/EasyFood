@@ -1,201 +1,32 @@
 <main class="container py-4">
-  <h2 class="text-center fw-bold">Painel Administrativo</h2>
+  <div id="form-relatorio" class="row justify-content-center align-items-end g-3 mb-4">
+    <div class="col-auto">
+      <label for="mes" class="form-label fw-semibold">Mês:</label>
+      <select id="mes" name="mes" class="form-select">
+        <option value="1">Janeiro</option>
+        <option value="2">Fevereiro</option>
+        <option value="3">Março</option>
+        <option value="4">Abril</option>
+        <option value="5">Maio</option>
+        <option value="6">Junho</option>
+        <option value="7">Julho</option>
+        <option value="8">Agosto</option>
+        <option value="9">Setembro</option>
+        <option value="10">Outubro</option>
+        <option value="11">Novembro</option>
+        <option value="12">Dezembro</option>
+      </select>
+    </div>
 
-  <!-- FILTRO POR MÊS -->
-  <form class="mb-4 text-end">
-    <label for="mes" class="form-label me-2">Selecionar mês:</label>
-    <select id="mes" name="mes" class="form-select d-inline w-auto">
-      <option selected>Julho</option>
-      <option>Junho</option>
-      <option>Maio</option>
-    </select>
-  </form>
+    <div class="col-auto">
+      <label for="ano" class="form-label fw-semibold">Ano:</label>
+      <input type="number" id="ano" name="ano" class="form-control" value="2025" min="2025" style="max-width: 120px;" />
+    </div>
 
-  <!-- RESUMO GERAL -->
-  <!-- RESUMO GERAL - NOVO DESIGN -->
-<div class="row row-cols-1 row-cols-md-4 g-4 mb-4">
-
-  <div class="col">
-    <div class="card shadow-sm rounded-4 h-100 border-0">
-      <div class="card-body d-flex align-items-center">
-        <div class="me-3">
-          <i class="bi bi-bag-fill fs-1 text-primary"></i>
-        </div>
-        <div>
-          <h6 class="text-muted mb-1">Pedidos do Dia</h6>
-          <h4 class="fw-bold mb-0"> {{vendasHoje}} </h4>
-        </div>
-      </div>
+    <div class="col-auto">
+      <button id="buscar" class="btn btn-primary btn-md px-4">Buscar</button>
     </div>
   </div>
 
-  <div class="col">
-    <div class="card shadow-sm rounded-4 h-100 border-0">
-      <div class="card-body d-flex align-items-center">
-        <div class="me-3">
-          <i class="bi bi-calendar-week-fill fs-1 text-success"></i>
-        </div>
-        <div>
-          <h6 class="text-muted mb-1">Pedidos da Semana</h6>
-          <h4 class="fw-bold mb-0">135</h4>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col">
-    <div class="card shadow-sm rounded-4 h-100 border-0">
-      <div class="card-body d-flex align-items-center">
-        <div class="me-3">
-          <i class="bi bi-calendar3 fs-1 text-warning"></i>
-        </div>
-        <div>
-          <h6 class="text-muted mb-1">Pedidos do Mês</h6>
-          <h4 class="fw-bold mb-0">562</h4>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col">
-    <div class="card shadow-sm rounded-4 h-100 border-0">
-      <div class="card-body d-flex align-items-center">
-        <div class="me-3">
-          <i class="bi bi-currency-dollar fs-1 text-danger"></i>
-        </div>
-        <div>
-          <h6 class="text-muted mb-1">Faturamento do Dia</h6>
-          <h4 class="fw-bold mb-0">R$ 1.340,00</h4>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-  <!-- FATURAMENTO MENSAL E OUTROS -->
-  <div class="row g-4 mb-4">
-    <div class="col-md-4">
-      <div class="card shadow-sm border-start border-info border-5 h-100">
-        <div class="card-body">
-          <h6 class="text-muted">💰 Faturamento Mensal</h6>
-          <h2 class="text-info fw-bold">R$ 12.320,00</h2>
-          <small>Total acumulado em Julho</small>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card shadow-sm border-start border-secondary border-5 h-100">
-        <div class="card-body">
-          <h6 class="text-muted">📉 Pedidos Cancelados</h6>
-          <h2 class="text-secondary fw-bold">8</h2>
-          <small>Em Julho</small>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card shadow-sm border-start border-success border-5 h-100">
-        <div class="card-body">
-          <h6 class="text-muted">🧾 Ticket Médio</h6>
-          <h2 class="text-success fw-bold">R$ 21,92</h2>
-          <small>Faturamento ÷ Pedidos</small>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORMAS DE PAGAMENTO -->
-  <div class="row g-4 mb-4">
-    <div class="col-md-12">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">💳 Pedidos por Forma de Pagamento</h5>
-          <ul class="list-group list-group-horizontal-md">
-            <li class="list-group-item flex-fill">Pix: <strong>320</strong></li>
-            <li class="list-group-item flex-fill">Dinheiro: <strong>185</strong></li>
-            <li class="list-group-item flex-fill">Cartão: <strong>57</strong></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMPARATIVO COM ONTEM + RESUMO SEMANAL -->
-  <div class="row g-4 mb-4">
-    <div class="col-md-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <h5 class="card-title">📈 Comparativo com Ontem</h5>
-          <p class="display-6 text-success">+20%</p>
-          <p class="text-muted">Aumento no número de pedidos em relação a ontem.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <h5 class="card-title">📅 Resumo Semanal</h5>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Segunda: 22 pedidos</li>
-            <li class="list-group-item">Terça: 18 pedidos</li>
-            <li class="list-group-item">Quarta: 25 pedidos</li>
-            <li class="list-group-item">Quinta: 21 pedidos</li>
-            <li class="list-group-item">Sexta: 24 pedidos</li>
-            <li class="list-group-item">Sábado: 25 pedidos</li>
-            <li class="list-group-item">Hoje: 24 pedidos</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RANKING DE PRODUTOS -->
-  <div class="card shadow-sm mb-5">
-    <div class="card-body">
-      <h5 class="card-title mb-4">🏆 Produtos Mais Vendidos</h5>
-      <table class="table table-hover">
-        <thead class="table-light">
-          <tr>
-            <th>#</th>
-            <th>Produto</th>
-            <th>Quantidade Vendida</th>
-            <th>Receita Estimada</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Costela</td>
-            <td>40</td>
-            <td>R$ 800,00</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Linguiça</td>
-            <td>32</td>
-            <td>R$ 480,00</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Frango Assado</td>
-            <td>28</td>
-            <td>R$ 560,00</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Farofa Caseira</td>
-            <td>19</td>
-            <td>R$ 190,00</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Refrigerante</td>
-            <td>14</td>
-            <td>R$ 70,00</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div id="resultado" class="mt-4"></div>
 </main>
